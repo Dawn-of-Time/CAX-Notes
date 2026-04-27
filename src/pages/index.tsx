@@ -345,29 +345,16 @@ $$
               ) : (
                 <div className="note-iframe-container" style={{height: '100%', width: '100%', position: 'relative', background: 'var(--flat-bg)', overflow: 'hidden'}}>
                    <iframe ref={iframeRef} src={`${displayDoc.path}?minimal=1`} 
-                     style={{width: '100%', height: '100%', border: 'none', opacity: iframeLoading ? 0 : 1, transition: 'opacity 0.2s ease-in'}} 
+                     style={{width: '100%', height: '100%', border: 'none'}} 
                      title={displayDoc.title}
                      onLoad={(e) => {
+                       setIframeLoading(false);
                        const doc = e.target.contentWindow.document;
-                       const style = doc.createElement('style');
-                       style.innerHTML = `
-                         .navbar, footer, .theme-doc-sidebar-container, nav[aria-label="Breadcrumbs"], .theme-doc-breadcrumbs, .theme-doc-footer-edit-meta-row, .theme-doc-toc-mobile, .theme-doc-toc-desktop, h1 { display: none !important; }
-                         .container, .theme-doc-main-container, .col { max-width: 100% !important; padding: 0 !important; margin: 0 !important; width: 100% !important; }
-                         main { padding: 40px 60px !important; width: 100% !important; }
-                         article { max-width: none !important; width: 100% !important; }
-                         html { scroll-behavior: smooth; font-size: 14px; }
-                         body { font-size: 14px !important; background-color: transparent !important; }
-                       `;
-                       doc.head.appendChild(style);
-                       
-                       setTimeout(() => {
-                         setIframeLoading(false);
-                         const headings = doc.querySelectorAll('h2, h3');
-                         if (headings.length > 0) {
-                           const tocItems = Array.from(headings).map(h => ({ text: h.innerText.replace('#', '').trim(), hash: '#' + h.id, level: h.tagName === 'H2' ? 0 : 1 })).filter(item => item.hash !== '#');
-                           setNoteTOC(tocItems);
-                         }
-                       }, 100);
+                       const headings = doc.querySelectorAll('h2, h3');
+                       if (headings.length > 0) {
+                         const tocItems = Array.from(headings).map(h => ({ text: h.innerText.replace('#', '').trim(), hash: '#' + h.id, level: h.tagName === 'H2' ? 0 : 1 })).filter(item => item.hash !== '#');
+                         setNoteTOC(tocItems);
+                       }
                      }}
                    />
                 </div>
