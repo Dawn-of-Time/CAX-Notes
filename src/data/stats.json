@@ -1,7 +1,18 @@
 {
-  "total_papers": 1,
-  "total_members": 1,
+  "total_papers": 3,
   "notes": [
+    {
+      "title": "Abstraction of mid-surfaces from solid models of thin-walled parts Adivide-and-conquer approach",
+      "path": "/docs/2026/2",
+      "tags": [],
+      "date": "2026-04-27"
+    },
+    {
+      "title": "Automatic solid decomposition and reduction for non-manifold",
+      "path": "/docs/2026/3",
+      "tags": [],
+      "date": "2026-04-27"
+    },
     {
       "title": "CADSmith: Multi-Agent CAD Generation with Programmatic Geometric Validation",
       "path": "/docs/2026/1",
@@ -13,21 +24,20 @@
         "OpenCASCADE",
         "检索增强生成"
       ],
-      "author": "肖文婧",
       "date": "2026-04-26"
-    }
-  ],
-  "leaderboard": [
-    {
-      "name": "肖文婧",
-      "count": 1,
-      "rank": "MEMBER"
     }
   ],
   "recent_activities": [
     {
+      "title": "Abstraction of mid-surfaces from solid models of thin-walled parts Adivide-and-conquer approach",
+      "date": "2026-04-27"
+    },
+    {
+      "title": "Automatic solid decomposition and reduction for non-manifold",
+      "date": "2026-04-27"
+    },
+    {
       "title": "CADSmith: Multi-Agent CAD Generation with Programmatic Geometric Validation",
-      "user": "肖文婧",
       "date": "2026-04-26"
     }
   ]

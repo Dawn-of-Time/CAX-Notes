@@ -1,6 +1,5 @@
 ---
 title: '论文题目'
-author: 姓名
 tags:
   - tag1
   - tag2

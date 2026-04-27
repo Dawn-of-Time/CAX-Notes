@@ -11,7 +11,7 @@ function syncIngest() {
   const subFolders = fs.readdirSync(bufferDir).filter(f => fs.statSync(path.join(bufferDir, f)).isDirectory());
   if (subFolders.length === 0) return;
 
-  console.log(`🔍 正在执行学术归档 (增强型语法转换模式)...`);
+  console.log(`🔍 正在执行学术归档 (精简版)...`);
 
   let maxId = 0;
   function findMaxId(dir) {
@@ -37,50 +37,73 @@ function syncIngest() {
   subFolders.forEach(folder => {
     const noteFolderPath = path.join(bufferDir, folder);
     const allFiles = fs.readdirSync(noteFolderPath).filter(f => !f.startsWith('.'));
-    const mdFile = allFiles.find(f => f.endsWith('.md'));
+    const mdFiles = allFiles.filter(f => f.endsWith('.md'));
 
-    if (!mdFile) return;
+    if (mdFiles.length === 0) return;
 
-    const mdPath = path.join(noteFolderPath, mdFile);
-    let { data, content: body } = matter(fs.readFileSync(mdPath, 'utf8'));
+    mdFiles.forEach(mdFile => {
+      const mdPath = path.join(noteFolderPath, mdFile);
+      let { data, content: body } = matter(fs.readFileSync(mdPath, 'utf8'));
 
-    const noteId = data.id || ++maxId;
-    data.id = noteId;
-    
-    const dateStr = data.date ? (data.date instanceof Date ? data.date.toISOString().split('T')[0] : String(data.date)) : '2026-04-26';
-    const year = new Date(dateStr).getFullYear() || 2026;
-    const targetDocsDir = path.join(docsRootDir, String(year));
-    const targetImagesDir = path.join(targetDocsDir, 'images');
+      // 1. 处理日期：始终设为当前日期
+      const now = new Date();
+      const dateStr = now.toISOString().split('T')[0];
+      data.date = dateStr;
 
-    if (!fs.existsSync(targetImagesDir)) fs.mkdirSync(targetImagesDir, { recursive: true });
+      // 2. 移除作者信息
+      if (data.author) delete data.author;
 
-    // --- 复杂前缀定义 ---
-    const prefix = `CADCG_NID${noteId}_`;
-    console.log(`📦 入库笔记: [${data.title}] (ID: ${noteId})`);
+      // 3. 处理标题：使用 Frontmatter 中的 title，若无则使用文件名
+      if (!data.title) {
+        data.title = path.basename(mdFile, '.md');
+      }
 
-    // 1. 处理图片搬运与引用
-    const imageFiles = allFiles.filter(f => !f.endsWith('.md'));
-    let newBody = body;
+      const noteId = data.id || ++maxId;
+      data.id = noteId;
+      
+      const year = now.getFullYear();
+      const targetDocsDir = path.join(docsRootDir, String(year));
+      const targetImagesDir = path.join(targetDocsDir, 'images');
 
-    imageFiles.forEach(imgName => {
-      const sourceImgPath = path.join(noteFolderPath, imgName);
-      let newImgName = imgName.startsWith(prefix) ? imgName : `${prefix}${imgName}`;
-      const targetImgPath = path.join(targetImagesDir, newImgName);
+      if (!fs.existsSync(targetImagesDir)) fs.mkdirSync(targetImagesDir, { recursive: true });
 
-      fs.copyFileSync(sourceImgPath, targetImgPath);
+      const prefix = `CADCG_NID${noteId}_`;
+      console.log(`📦 入库笔记: [${data.title}] (ID: ${noteId})`);
 
-      const escapedName = imgName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      const imgRefRegex = new RegExp(`src\\s*=\\s*(["'])(?:\\.\\/)?(?!images\\/|CADCG_NID)${escapedName}\\1`, 'g');
-      newBody = newBody.replace(imgRefRegex, `src="./images/${newImgName}"`);
+      // 4. 处理图片搬运与引用转换
+      const imageFiles = allFiles.filter(f => !f.endsWith('.md'));
+      let newBody = body;
+
+      imageFiles.forEach(imgName => {
+        const sourceImgPath = path.join(noteFolderPath, imgName);
+        let newImgName = imgName.startsWith('CADCG_NID') ? imgName : `${prefix}${imgName}`;
+        const targetImgPath = path.join(targetImagesDir, newImgName);
+
+        const escapedName = imgName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        
+        // <img> 标签格式
+        const imgTagRegex = new RegExp(`src\\s*=\\s*(["'])(?:\\.\\/)?${escapedName}\\1`, 'g');
+        if (imgTagRegex.test(newBody)) {
+          if (fs.existsSync(sourceImgPath)) fs.copyFileSync(sourceImgPath, targetImgPath);
+          newBody = newBody.replace(imgTagRegex, `src={require("./images/${newImgName}").default}`);
+        }
+
+        // Markdown ![]() 格式
+        const mdImgRegex = new RegExp(`!\\s*\\[(.*?)\\]\\s*\\((?:\\.\\/)?${escapedName}\\)`, 'g');
+        if (mdImgRegex.test(newBody)) {
+          if (fs.existsSync(sourceImgPath)) fs.copyFileSync(sourceImgPath, targetImgPath);
+          newBody = newBody.replace(mdImgRegex, `<img src={require("./images/${newImgName}").default} alt="$1" />`);
+        }
+      });
+
+      // 写回正式库
+      const finalFileName = `${dateStr}-${noteId}.md`;
+      const finalMdPath = path.join(targetDocsDir, finalFileName);
+      fs.writeFileSync(finalMdPath, matter.stringify(newBody, data));
+      console.log(`   ✅ 归档成功: ${finalFileName}`);
     });
 
-    // 写回正式库
-    const finalFileName = `${dateStr}-${noteId}.md`;
-    const finalMdPath = path.join(targetDocsDir, finalFileName);
-    fs.writeFileSync(finalMdPath, matter.stringify(newBody, data));
-
     fs.rmSync(noteFolderPath, { recursive: true, force: true });
-    console.log(`   ✅ 归档成功: ${finalFileName} (已完成语法转换)`);
   });
 }
 
