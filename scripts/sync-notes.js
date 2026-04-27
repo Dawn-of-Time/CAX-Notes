@@ -59,8 +59,16 @@ function sync() {
   // 按日期降序
   notes.sort((a, b) => new Date(b.date) - new Date(a.date));
 
+  // 读取模板内容
+  let templateRaw = '';
+  const templatePath = path.join(docsDir, 'templates/note-template.md');
+  if (fs.existsSync(templatePath)) {
+    templateRaw = fs.readFileSync(templatePath, 'utf8');
+  }
+
   fs.writeFileSync(statsFilePath, JSON.stringify({
     total_papers: notes.length,
+    template_raw: templateRaw,
     notes,
     recent_activities: notes.slice(0, 5).map(n => ({ title: n.title, date: n.date }))
   }, null, 2));
