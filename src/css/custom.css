@@ -557,6 +557,14 @@ body {
     align-items: flex-start; 
     gap: 12px; 
     padding: 16px;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+  .note-content-main {
+    width: 100%;
+    min-width: 0; /* 关键：允许子元素缩小 */
+    overflow: hidden;
   }
   .note-link-title { 
     font-size: 16px; 
@@ -570,8 +578,8 @@ body {
     flex-wrap: nowrap !important;
     width: 100%;
     overflow: hidden;
-    mask-image: linear-gradient(to right, black 80%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to right, black 80%, transparent 100%);
+    mask-image: linear-gradient(to right, black 70%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, black 70%, transparent 100%);
   }
   .note-content-side { 
     width: 100%; 
@@ -582,6 +590,9 @@ body {
     justify-content: flex-start; 
   }
   .note-meta-column { flex-direction: row; justify-content: space-between; font-size: 10px; }
+
+  /* 移除不再需要的 divider */
+  .sidebar-divider { display: none !important; }
 
   /* 右侧面板移至底部 */
   .flat-right-panel { 

@@ -297,9 +297,6 @@ $$
           <nav className="sidebar-nav-group">
             <button className={`flat-nav-link ${activeTab === 'dashboard' && !selectedNote ? 'active' : ''}`} onClick={() => { setActiveTab('dashboard'); setSelectedNote(null); }}><Icons.Terminal /> 总览</button>
             <button className={`flat-nav-link ${activeTab === 'library' && !selectedNote ? 'active' : ''}`} onClick={() => { setActiveTab('library'); setSelectedNote(null); }}><Icons.Library /> 文库</button>
-          </nav>
-          <div className="sidebar-divider" />
-          <nav className="sidebar-nav-group">
             <button className={`flat-nav-link ${activeTab === 'template' ? 'active' : ''}`} onClick={() => { setActiveTab('template'); setSelectedNote(null); }}><Icons.Resource /> 笔记模板</button>
             <button className={`flat-nav-link ${activeTab === 'reference' && !selectedNote ? 'active' : ''}`} onClick={() => { setActiveTab('reference'); setSelectedNote(null); }}><Icons.Resource /> 引用总库</button>
           </nav>
