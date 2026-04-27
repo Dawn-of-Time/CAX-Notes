@@ -603,6 +603,10 @@ body {
     background: var(--flat-sidebar-bg);
     flex: none;
   }
+  /* 笔记详情页在移动端不需要目录 */
+  .is-viewing-doc .flat-right-panel {
+    display: none;
+  }
   
   /* 预览/源码切换适配 */
   .doc-view-header { 
