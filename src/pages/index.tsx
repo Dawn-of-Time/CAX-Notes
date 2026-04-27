@@ -103,6 +103,9 @@ function WorkstationShell() {
   const [selectedTag, setSelectedTag] = useState('全部标签');
   const [showMobileTOC, setShowMobileTOC] = useState(false);
 
+  // 用于彻底解决 404 闪烁的延迟路径状态
+  const [iframeSrc, setIframeSrc] = useState('');
+
   // 初始化 URL 处理
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -113,21 +116,37 @@ function WorkstationShell() {
     if (docPath) {
       const allNotes = [...statsData.notes];
       const foundNote = allNotes.find(n => n.path === docPath);
-      if (foundNote) setSelectedNote(foundNote);
-      else if (docPath === '/docs/templates/note-template') setSelectedNote({ title: '笔记模板', path: '/docs/templates/note-template' });
-      else if (docPath === '/docs/reference/library') setSelectedNote({ title: '引用总库', path: '/docs/reference/library' });
+      if (foundNote) {
+        setSelectedNote(foundNote);
+        setIframeSrc(`${foundNote.path}?minimal=1`);
+      }
+      else if (docPath === '/docs/templates/note-template') {
+        setSelectedNote({ title: '笔记模板', path: '/docs/templates/note-template' });
+        setIframeSrc('/docs/templates/note-template?minimal=1');
+      }
+      else if (docPath === '/docs/reference/library') {
+        setSelectedNote({ title: '引用总库', path: '/docs/reference/library' });
+        setIframeSrc('/docs/reference/library?minimal=1');
+      }
     }
   }, []);
 
   const updateStateAndUrl = (tab, note = null) => {
     setActiveTab(tab);
     setSelectedNote(note);
-    setNoteTOC([]); // 切换笔记时立即清空旧目录
+    setNoteTOC([]); 
+    setIframeLoading(true);
+    setIframeSrc(''); // 先清空路径，防止旧页面或 404 闪烁
+
     const params = new URLSearchParams();
     params.set('tab', tab);
     if (note) params.set('doc', note.path);
     window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
-    if (note) setIframeLoading(true);
+    
+    if (note) {
+      // 给予 50ms 缓冲，确保状态同步后再加载
+      setTimeout(() => setIframeSrc(`${note.path}?minimal=1`), 50);
+    }
   };
 
   const handleTOCClick = (hash) => {
@@ -248,13 +267,16 @@ function WorkstationShell() {
                   <pre><code style={{fontSize: '13px', lineHeight: '1.6'}}>{"```markdown\n" + noteTemplateRaw + "\n```"}</code></pre>
                 </div>
               ) : (
-                <div className="note-iframe-container" style={{height: '100%', width: '100%', position: 'relative', background: 'var(--flat-bg)', overflow: 'hidden'}}>
-                   {displayDoc.path && (
-                     <iframe ref={iframeRef} src={`${displayDoc.path}?minimal=1`} 
+                <div className="note-iframe-container" style={{
+                  height: '100%', width: '100%', position: 'relative', 
+                  background: 'var(--flat-bg)', overflow: 'hidden',
+                  opacity: iframeLoading ? 0 : 1, transition: 'opacity 0.2s'
+                }}>
+                   {iframeSrc && (
+                     <iframe ref={iframeRef} src={iframeSrc} 
                        style={{width: '100%', height: '100%', border: 'none'}} 
                        title={displayDoc.title}
                        onLoad={(e) => {
-                         setIframeLoading(false);
                          try {
                            const doc = e.target.contentWindow.document;
                            
@@ -326,9 +348,11 @@ function WorkstationShell() {
                            extractTOC();
                            setTimeout(extractTOC, 300);
                            setTimeout(extractTOC, 1000);
+                           setIframeLoading(false); // 内容就绪后再关闭 loading
                          } catch (err) {
                            console.error("TOC Extraction failed:", err);
                            setNoteTOC([]);
+                           setIframeLoading(false);
                          }
                        }}
                       />
