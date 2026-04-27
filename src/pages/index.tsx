@@ -361,7 +361,7 @@ $$
             {activeTab === 'dashboard' && (
               <div className="view-animate">
                 <div className="greeting-text">{greeting}</div>
-                <div style={{display: 'flex', gap: '24px', marginBottom: '64px'}}>
+                <div className="stats-grid" style={{display: 'flex', gap: '24px', marginBottom: '64px'}}>
                   <div className="stat-box-mini"><span className="lab">笔记总量</span><span className="val">{statsData.total_papers}</span></div>
                   <div className="stat-box-mini"><span className="lab">活跃成员</span><span className="val">{statsData.total_members}</span></div>
                 </div>
