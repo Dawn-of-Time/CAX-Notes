@@ -299,8 +299,8 @@ button, select, input {
   gap: 8px; 
   overflow: hidden; 
   padding: 4px 0;
-  width: fit-content;
-  max-width: 100%;
+  width: 100%; /* 关键：改为100%，使渐变锚点固定在容器右侧而非内容边缘 */
+  background: transparent;
   mask-image: linear-gradient(to right, black 90%, transparent 100%);
   -webkit-mask-image: linear-gradient(to right, black 90%, transparent 100%);
 }
