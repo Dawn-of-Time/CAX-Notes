@@ -146,14 +146,13 @@ function WorkstationShell() {
     });
   }, [selectedTag, query]);
 
-  const [greeting, setGreeting] = useState("你好，CAD 研习生");
-
-  useEffect(() => {
+  const [greeting] = useState(() => {
+    if (!ExecutionEnvironment.canUseDOM) return "你好，CAD 研习生";
     const hour = new Date().getHours();
-    if (hour >= 5 && hour < 12) setGreeting("早上好！保持专注，今天也是精进算法与模型的好时机。");
-    else if (hour >= 12 && hour < 18) setGreeting("下午好！攻坚克难，让几何逻辑更进一步。");
-    else setGreeting("晚上好！沉淀思考，在代码与模型中寻找突破。");
-  }, []);
+    if (hour >= 5 && hour < 12) return "早上好！保持专注，今天也是精进算法与模型的好时机。";
+    if (hour >= 12 && hour < 18) return "下午好！攻坚克难，让几何逻辑更进一步。";
+    return "晚上好！沉淀思考，在代码与模型中寻找突破。";
+  });
 
   const noteTemplateRaw = statsData.template_raw;
   const isViewingDoc = !!selectedNote;
@@ -250,86 +249,90 @@ function WorkstationShell() {
                 </div>
               ) : (
                 <div className="note-iframe-container" style={{height: '100%', width: '100%', position: 'relative', background: 'var(--flat-bg)', overflow: 'hidden'}}>
-                   <iframe ref={iframeRef} src={`${displayDoc.path}?minimal=1`} 
-                     style={{width: '100%', height: '100%', border: 'none'}} 
-                     title={displayDoc.title}
-                     onLoad={(e) => {
-                       setIframeLoading(false);
-                       try {
-                         const doc = e.target.contentWindow.document;
-                         
-                         // 1. 注入样式
-                         const style = doc.createElement('style');
-                         style.innerHTML = `
-                           .navbar, footer, .theme-doc-sidebar-container, nav[aria-label="Breadcrumbs"], .theme-doc-breadcrumbs, .theme-doc-footer-edit-meta-row, .theme-doc-toc-mobile, .theme-doc-toc-desktop, h1, #library { display: none !important; }
-                           .container, .theme-doc-main-container, .col { max-width: 100% !important; padding: 0 !important; margin: 0 !important; width: 100% !important; }
-                           main { padding: 24px 60px !important; width: 100% !important; }
-                           article { max-width: none !important; width: 100% !important; }
-                           html { scroll-behavior: smooth; font-size: 15px; }
-                           body { font-size: 15px !important; background-color: transparent !important; }
-                           .katex { font-family: KaTeX_Main, 'Times New Roman', serif !important; }
-
-                           /* 注入 Admonition 优化 (极致紧凑版) */
-                           [class*='admonition'] { padding: 6px 12px !important; margin: 0.5rem 0 !important; border-radius: 4px !important; }
+                   {displayDoc.path && (
+                     <iframe ref={iframeRef} src={`${displayDoc.path}?minimal=1`} 
+                       style={{width: '100%', height: '100%', border: 'none'}} 
+                       title={displayDoc.title}
+                       onLoad={(e) => {
+                         setIframeLoading(false);
+                         try {
+                           const doc = e.target.contentWindow.document;
                            
-                           [class*='admonitionHeading'] { 
-                             display: flex !important; 
-                             align-items: center !important; 
-                             margin: 0 !important; 
-                             padding: 0 !important; 
-                             font-size: 1em !important; 
-                             line-height: 1.2 !important; 
-                             text-transform: uppercase; 
-                             font-weight: 800 !important; 
-                           }
+                           // 1. 注入样式
+                           const style = doc.createElement('style');
+                           style.innerHTML = `
+                             .navbar, footer, .theme-doc-sidebar-container, 
+                             nav[aria-label="Breadcrumbs"], .theme-doc-breadcrumbs, 
+                             .theme-doc-footer-edit-meta-row, .theme-doc-toc-mobile, 
+                             .theme-doc-toc-desktop, h1, #library, .breadcrumbs { display: none !important; }
+                             .container, .theme-doc-main-container, .col { max-width: 100% !important; padding: 0 !important; margin: 0 !important; width: 100% !important; }
+                             main { padding: 24px 60px !important; width: 100% !important; }
+                             article { max-width: none !important; width: 100% !important; }
+                             html { scroll-behavior: smooth; font-size: 15px; }
+                             body { font-size: 15px !important; background-color: transparent !important; }
+                             .katex { font-family: KaTeX_Main, 'Times New Roman', serif !important; }
+
+                             /* 注入 Admonition 优化 (极致紧凑版) */
+                             [class*='admonition'] { padding: 6px 12px !important; margin: 0.5rem 0 !important; border-radius: 4px !important; }
+                             
+                             [class*='admonitionHeading'] { 
+                               display: flex !important; 
+                               align-items: center !important; 
+                               margin: 0 !important; 
+                               padding: 0 !important; 
+                               font-size: 1em !important; 
+                               line-height: 1.2 !important; 
+                               text-transform: uppercase; 
+                               font-weight: 800 !important; 
+                             }
+                             
+                             /* 确保图标容器和图标本身垂直居中且无偏移 */
+                             [class*='admonitionIcon'] { 
+                               display: flex !important; 
+                               align-items: center !important; 
+                               margin-right: 6px !important; 
+                               padding: 0 !important;
+                               flex-shrink: 0 !important;
+                             }
+                             [class*='admonitionHeading'] svg { 
+                               width: 14px !important; 
+                               height: 14px !important; 
+                               display: block !important; 
+                             }
+
+                             [class*='admonitionContent'] { 
+                               margin: 0 !important; 
+                               padding: 0 !important; 
+                               line-height: 1.2 !important; 
+                               font-size: 13px !important; 
+                             }
+                             [class*='admonitionContent'] > *:first-child { margin-top: 2px !important; }
+                             [class*='admonitionContent'] p { margin: 0 !important; }
+                             [class*='admonitionContent'] > *:last-child { margin-bottom: 0 !important; }
+                           `;
+                           doc.head.appendChild(style);
+
+                           // 2. 提取目录
+                           const extractTOC = () => {
+                             const headings = Array.from(doc.querySelectorAll('h2, h3, h4'));
+                             const toc = headings.map(h => ({
+                               text: h.innerText.replace('#', '').trim(),
+                               level: h.tagName === 'H2' ? 1 : h.tagName === 'H3' ? 2 : 3,
+                               hash: '#' + (h.id || h.getAttribute('data-id') || '')
+                             })).filter(item => item.text && item.hash !== '#');
+                             setNoteTOC(toc);
+                           };
                            
-                           /* 确保图标容器和图标本身垂直居中且无偏移 */
-                           [class*='admonitionIcon'] { 
-                             display: flex !important; 
-                             align-items: center !important; 
-                             margin-right: 6px !important; 
-                             padding: 0 !important;
-                             flex-shrink: 0 !important;
-                           }
-                           [class*='admonitionHeading'] svg { 
-                             width: 14px !important; 
-                             height: 14px !important; 
-                             display: block !important; 
-                           }
-
-                           [class*='admonitionContent'] { 
-                             margin: 0 !important; 
-                             padding: 0 !important; 
-                             line-height: 1.2 !important; 
-                             font-size: 13px !important; 
-                           }
-                           [class*='admonitionContent'] > *:first-child { margin-top: 2px !important; }
-                           [class*='admonitionContent'] p { margin: 0 !important; }
-                           [class*='admonitionContent'] > *:last-child { margin-bottom: 0 !important; }
-                         `;
-                         doc.head.appendChild(style);
-
-                         // 2. 提取目录 (优化提取逻辑：增加重试以兼容 React 渲染)
-                         const extractTOC = () => {
-                           const headings = Array.from(doc.querySelectorAll('h2, h3, h4'));
-                           const toc = headings.map(h => ({
-                             text: h.innerText.replace('#', '').trim(),
-                             level: h.tagName === 'H2' ? 1 : h.tagName === 'H3' ? 2 : 3,
-                             hash: '#' + (h.id || h.getAttribute('data-id') || '')
-                           })).filter(item => item.text && item.hash !== '#');
-                           setNoteTOC(toc);
-                         };
-                         
-                         extractTOC();
-                         // 针对单页应用渲染延迟，在 300ms 和 1000ms 后再次尝试
-                         setTimeout(extractTOC, 300);
-                         setTimeout(extractTOC, 1000);
-                       } catch (err) {
-                         console.error("TOC Extraction failed:", err);
-                         setNoteTOC([]);
-                       }
-                     }}
-                    />
+                           extractTOC();
+                           setTimeout(extractTOC, 300);
+                           setTimeout(extractTOC, 1000);
+                         } catch (err) {
+                           console.error("TOC Extraction failed:", err);
+                           setNoteTOC([]);
+                         }
+                       }}
+                      />
+                   )}
                  </div>
                )}
             </div>
