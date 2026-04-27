@@ -842,3 +842,8 @@ button, select, input {
   /* Iframe 宽度补丁 */
   .flat-main-stage.no-padding { height: 75vh; }
 }
+
+/* --- 移除笔记详情页面的上一页和下一页 --- */
+.pagination-nav {
+  display: none !important;
+}
