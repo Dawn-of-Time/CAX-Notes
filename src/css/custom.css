@@ -60,6 +60,9 @@ body {
 .sidebar-logo { flex-shrink: 0; display: flex; align-items: center; color: var(--flat-primary); }
 .sidebar-main-title { font-size: 18px; font-weight: 900; margin: 0; white-space: nowrap; letter-spacing: -0.5px; }
 
+.sidebar-nav-container { display: flex; flex-direction: column; flex: 1; }
+.sidebar-nav-group { display: flex; flex-direction: column; gap: 4px; }
+
 .flat-nav-link { 
   display: flex; 
   align-items: center; 
@@ -86,6 +89,24 @@ body {
 
 .sidebar-divider { height: 1px; background: var(--flat-border); margin: 24px 0; opacity: 0.5; }
 .sidebar-footer { margin-top: auto; padding-top: 20px; }
+
+.theme-toggle-btn { 
+  width: 100%; 
+  padding: 16px; 
+  border: 1px solid var(--flat-border); 
+  background: #ffffff; 
+  border-radius: var(--radius-md); 
+  font-weight: 800; 
+  font-size: 14px; 
+  cursor: pointer; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  gap: 12px;
+  transition: all 0.2s;
+}
+[data-theme='dark'] .theme-toggle-btn { background: var(--flat-muted); }
+.theme-toggle-btn:hover { border-color: var(--flat-primary); color: var(--flat-primary); }
 
 /* --- Main Content Area --- */
 .flat-main-stage { 
@@ -163,11 +184,53 @@ body {
 }
 .flat-tag { font-size: 10px; font-weight: 500; padding: 4px 8px; background: var(--flat-sidebar-bg); border: 1px solid var(--flat-border); border-radius: 6px; color: var(--flat-primary); white-space: nowrap; }
 
-.note-content-side { width: 160px; flex-shrink: 0; border-left: 1px solid var(--flat-border); padding-left: 24px; display: flex; align-items: center; }
-.note-meta-column { display: flex; flex-direction: column; gap: 4px; width: 100%; }
-.meta-bit { font-size: 11px; font-weight: 800; opacity: 0.5; letter-spacing: 0.5px; white-space: nowrap; }
+.note-content-side { width: 100px; flex-shrink: 0; border-left: 1px solid var(--flat-border); padding-left: 20px; display: flex; align-items: center; justify-content: center; }
+
+.note-date-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--flat-fg);
+}
+.note-date-badge .date-day {
+  font-size: 36px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--flat-primary);
+  letter-spacing: -1px;
+}
+.note-date-badge .date-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.note-date-badge .date-month {
+  font-size: 13px;
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 1;
+  opacity: 0.9;
+}
+.note-date-badge .date-year {
+  font-size: 10px;
+  font-weight: 800;
+  opacity: 0.3;
+  margin-top: 2px;
+  letter-spacing: 1px;
+}
+
+/* 响应式适配移动端日期 */
+@media (max-width: 1024px) {
+  .note-date-badge {
+    gap: 8px;
+  }
+  .note-date-badge .date-day { font-size: 24px; letter-spacing: -1px; }
+  .note-date-badge .date-month { font-size: 11px; }
+}
 
 .unified-note-item.active { border-left: 6px solid var(--flat-primary); padding-left: 23px; border-color: var(--flat-primary); }
+[data-theme='dark'] .note-date-badge { background: rgba(96, 165, 250, 0.1); border-color: rgba(96, 165, 250, 0.3); }
+[data-theme='dark'] .note-date-badge .date-year { color: #ffffff; }
 
 /* --- 搜索与筛选 --- */
 .library-filter-bar { display: flex; gap: 12px; margin-bottom: 32px; height: 48px; }
@@ -287,24 +350,6 @@ body {
 .breadcrumb-item.active { opacity: 0.8; }
 .breadcrumb-item:not(:last-child)::after { content: "/"; margin-left: 12px; opacity: 0.2; }
 
-.theme-toggle-btn { 
-  width: 100%; 
-  padding: 16px; 
-  border: 1px solid var(--flat-border); 
-  background: #ffffff; 
-  border-radius: var(--radius-md); 
-  font-weight: 800; 
-  font-size: 14px; 
-  cursor: pointer; 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
-  gap: 12px;
-  transition: all 0.2s;
-}
-[data-theme='dark'] .theme-toggle-btn { background: var(--flat-muted); }
-.theme-toggle-btn:hover { border-color: var(--flat-primary); color: var(--flat-primary); }
-
 /* --- Markdown 居中 --- */
 .markdown img, .theme-doc-markdown img { display: block; margin: 3em auto 1em auto !important; max-width: 100%; border-radius: 12px; }
 .markdown figcaption, .theme-doc-markdown figcaption, .markdown em, .theme-doc-markdown em { display: block; text-align: center; margin-bottom: 3em; font-size: 13px; opacity: 0.6; }
@@ -397,7 +442,24 @@ body {
   font-family: 'JetBrains Mono', 'Fira Code', monospace;
 }
 
-/* --- 响应式适配 (Mobile & Tablet) --- 放在最后以确保覆盖 --- */
+/* Iframe Loader */
+.iframe-loader {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--flat-bg);
+  z-index: 5;
+}
+.spinner {
+  width: 32px; height: 32px;
+  border: 4px solid var(--flat-border);
+  border-top-color: var(--flat-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* --- 响应式适配 (Mobile & Tablet) --- */
 @media (max-width: 1024px) {
   .so-container { 
     flex-direction: column; 
@@ -411,7 +473,7 @@ body {
   .flat-sidebar { 
     width: 100%; 
     height: auto; 
-    padding: 20px 16px; 
+    padding: 12px 16px; 
     border-right: none; 
     border-bottom: 1px solid var(--flat-border);
     position: sticky;
@@ -419,35 +481,52 @@ body {
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     z-index: 100;
   }
-  .sidebar-title-row { margin-bottom: 16px; justify-content: center; }
-  .flat-sidebar nav { 
+  .sidebar-title-row { margin-bottom: 12px; justify-content: space-between; padding: 0 4px; }
+  .sidebar-main-title { display: none; } /* 移动端隐藏文字标题 */
+  .sidebar-logo { transform: scale(0.85); }
+  
+  .sidebar-nav-container { flex-direction: row; align-items: center; gap: 8px; width: 100%; overflow: hidden; }
+  .sidebar-nav-group { 
     flex-direction: row !important; 
     overflow-x: auto; 
-    gap: 8px !important;
-    padding-bottom: 8px;
+    gap: 6px !important;
+    padding-bottom: 2px;
     -webkit-overflow-scrolling: touch;
-    width: 100%;
-    display: flex;
+    flex: 1;
   }
-  .flat-sidebar nav::-webkit-scrollbar { display: none; }
+  .sidebar-nav-group::-webkit-scrollbar { display: none; }
   .flat-nav-link { 
     white-space: nowrap; 
-    padding: 8px 16px; 
-    font-size: 13px;
+    padding: 6px 12px; 
+    font-size: 12px;
     background: var(--flat-muted);
     flex-shrink: 0;
+    margin-bottom: 0;
   }
-  .sidebar-divider { display: none; }
-  .sidebar-footer { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--flat-border); }
-  .theme-toggle-btn { padding: 8px; font-size: 12px; }
+  .sidebar-divider { 
+    width: 1px; height: 20px; 
+    margin: 0 4px; 
+    background: var(--flat-border); 
+    display: block; 
+    flex-shrink: 0;
+  }
+  
+  .sidebar-footer { 
+    margin-top: 0; padding-top: 0; 
+    margin-left: 8px;
+    border-top: none; 
+  }
+  .theme-toggle-btn { width: 40px; height: 40px; padding: 0; border-radius: 50%; background: var(--flat-muted); }
+  .theme-toggle-btn .btn-text { display: none; } /* 移动端仅保留图标 */
+  .theme-toggle-btn svg { width: 18px; height: 18px; }
 
   /* 主内容区适配 */
   .flat-main-stage { 
-    padding: 24px 16px; 
+    padding: 20px 16px; 
     overflow-y: visible; 
     flex: none;
   }
-  .greeting-text { font-size: 20px; margin-bottom: 24px; text-align: center; }
+  .greeting-text { font-size: 18px; margin-bottom: 20px; text-align: center; }
   
   /* 统计卡片堆叠 */
   .stats-grid { 
@@ -465,15 +544,7 @@ body {
     gap: 12px; 
     padding: 16px;
   }
-  .note-link-title { 
-    font-size: 16px; 
-    white-space: normal; 
-    display: -webkit-box; 
-    -webkit-line-clamp: 2; 
-    -webkit-box-orient: vertical; 
-    overflow: hidden; 
-    text-overflow: ellipsis; 
-  }
+  .note-link-title { font-size: 16px; white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
   .note-content-side { 
     width: 100%; 
     border-left: none; 
@@ -497,15 +568,16 @@ body {
   /* 预览/源码切换适配 */
   .doc-view-header { 
     flex-direction: column; 
-    gap: 12px; 
+    gap: 10px; 
     padding: 12px 16px; 
     height: auto;
     min-height: unset;
   }
-  .view-mode-toggle { width: 100%; max-width: none; }
+  .view-mode-toggle { width: 100%; max-width: none; height: 34px; }
+  .toggle-btn { font-size: 12px; }
   .source-view-container { padding: 16px; }
   .source-view-container pre { padding: 16px; font-size: 12px; }
   
   /* Iframe 宽度补丁 */
-  .flat-main-stage.no-padding { height: 60vh; }
+  .flat-main-stage.no-padding { height: 75vh; }
 }

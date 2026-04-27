@@ -33,6 +33,13 @@ const getWeatherDesc = (code) => {
 };
 
 function UnifiedNoteItem({ note, onSelect, active }) {
+  const dateParts = note.date.split('-');
+  const displayDate = dateParts.length === 3 ? { y: dateParts[0], m: dateParts[1], d: dateParts[2] } : { y: '', m: '', d: '' };
+  
+  // 将数字月份转换为英文简写增强视觉感
+  const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+  const monthLabel = months[parseInt(displayDate.m) - 1] || displayDate.m;
+
   return (
     <div className={`unified-note-item ${active ? 'active' : ''}`}>
       <div className="note-content-main">
@@ -44,9 +51,12 @@ function UnifiedNoteItem({ note, onSelect, active }) {
          )}
       </div>
       <div className="note-content-side">
-        <div className="note-meta-column">
-           <span className="meta-bit">BY @{note.author}</span>
-           <span className="meta-bit">ON {note.date}</span>
+        <div className="note-date-badge">
+           <div className="date-day">{displayDate.d}</div>
+           <div className="date-right">
+              <div className="date-month">{monthLabel}</div>
+              <div className="date-year">{displayDate.y}</div>
+           </div>
         </div>
       </div>
     </div>
@@ -141,6 +151,7 @@ function WorkstationShell() {
   const [templateViewMode, setTemplateViewMode] = useState('source'); // 'source' | 'preview'
   const [noteTOC, setNoteTOC] = useState([]);
   const iframeRef = useRef(null);
+  const [iframeLoading, setIframeLoading] = useState(true);
   const { colorMode, setColorMode } = useColorMode();
   const [greeting, setGreeting] = useState('开启今日的几何探索之旅。');
   const [query, setQuery] = useState('');
@@ -152,7 +163,7 @@ function WorkstationShell() {
     return null;
   }, [activeTab, selectedNote]);
   const isViewingDoc = !!displayDoc;
-  useEffect(() => { setNoteTOC([]); }, [displayDoc?.path]);
+  useEffect(() => { setNoteTOC([]); setIframeLoading(true); }, [displayDoc?.path]);
   const handleTOCClick = (hash) => {
     if (iframeRef.current && iframeRef.current.contentWindow) {
       iframeRef.current.contentWindow.location.hash = hash;
@@ -171,7 +182,7 @@ function WorkstationShell() {
   }, []);
   const filteredNotes = useMemo(() => {
     return statsData.notes.filter(n => {
-      const matchesSearch = n.title.toLowerCase().includes(query.toLowerCase()) || n.tags.some(t => t.toLowerCase().includes(query.toLowerCase())) || n.author.toLowerCase().includes(query.toLowerCase());
+      const matchesSearch = n.title.toLowerCase().includes(query.toLowerCase()) || n.tags.some(t => t.toLowerCase().includes(query.toLowerCase()));
       const matchesTag = selectedTag === '全部' || n.tags.includes(selectedTag);
       return matchesSearch && matchesTag;
     });
@@ -282,17 +293,23 @@ $$
           <div className="sidebar-logo"><Icons.CAD /></div>
           <h1 className="sidebar-main-title">CAD & CG 研习录</h1>
         </div>
-        <nav style={{display: 'flex', flexDirection: 'column', gap: '4px'}}>
-          <button className={`flat-nav-link ${activeTab === 'dashboard' && !selectedNote ? 'active' : ''}`} onClick={() => { setActiveTab('dashboard'); setSelectedNote(null); }}><Icons.Terminal /> 总览</button>
-          <button className={`flat-nav-link ${activeTab === 'library' && !selectedNote ? 'active' : ''}`} onClick={() => { setActiveTab('library'); setSelectedNote(null); }}><Icons.Library /> 文库</button>
-          <button className={`flat-nav-link ${activeTab === 'hunters' && !selectedNote ? 'active' : ''}`} onClick={() => { setActiveTab('hunters'); setSelectedNote(null); }}><Icons.Award /> 排行</button>
-        </nav>
-        <div className="sidebar-divider" />
-        <nav style={{display: 'flex', flexDirection: 'column', gap: '4px'}}>
-          <button className={`flat-nav-link ${activeTab === 'template' ? 'active' : ''}`} onClick={() => { setActiveTab('template'); setSelectedNote(null); }}><Icons.Resource /> 笔记模板</button>
-          <button className={`flat-nav-link ${activeTab === 'reference' && !selectedNote ? 'active' : ''}`} onClick={() => { setActiveTab('reference'); setSelectedNote(null); }}><Icons.Resource /> 引用总库</button>
-        </nav>
-        <div className="sidebar-footer"><button className="theme-toggle-btn" onClick={() => setColorMode(colorMode === 'dark' ? 'light' : 'dark')}>{colorMode === 'dark' ? <Icons.Sun /> : <Icons.Moon />} 切换主题</button></div>
+        <div className="sidebar-nav-container">
+          <nav className="sidebar-nav-group">
+            <button className={`flat-nav-link ${activeTab === 'dashboard' && !selectedNote ? 'active' : ''}`} onClick={() => { setActiveTab('dashboard'); setSelectedNote(null); }}><Icons.Terminal /> 总览</button>
+            <button className={`flat-nav-link ${activeTab === 'library' && !selectedNote ? 'active' : ''}`} onClick={() => { setActiveTab('library'); setSelectedNote(null); }}><Icons.Library /> 文库</button>
+          </nav>
+          <div className="sidebar-divider" />
+          <nav className="sidebar-nav-group">
+            <button className={`flat-nav-link ${activeTab === 'template' ? 'active' : ''}`} onClick={() => { setActiveTab('template'); setSelectedNote(null); }}><Icons.Resource /> 笔记模板</button>
+            <button className={`flat-nav-link ${activeTab === 'reference' && !selectedNote ? 'active' : ''}`} onClick={() => { setActiveTab('reference'); setSelectedNote(null); }}><Icons.Resource /> 引用总库</button>
+          </nav>
+        </div>
+        <div className="sidebar-footer">
+          <button className="theme-toggle-btn" onClick={() => setColorMode(colorMode === 'dark' ? 'light' : 'dark')}>
+            {colorMode === 'dark' ? <Icons.Sun /> : <Icons.Moon />} 
+            <span className="btn-text">切换主题</span>
+          </button>
+        </div>
       </aside>
 
       <main className={`flat-main-stage ${isViewingDoc ? 'no-padding' : ''}`}>
@@ -318,19 +335,23 @@ $$
               </div>
             )}
 
-            <div className="note-iframe-wrapper" style={{flex: 1, width: '100%'}}>
+            <div className="note-iframe-wrapper" style={{flex: 1, width: '100%', position: 'relative'}}>
+              {iframeLoading && templateViewMode !== 'source' && (
+                <div className="iframe-loader">
+                   <div className="spinner"></div>
+                </div>
+              )}
               {activeTab === 'template' && templateViewMode === 'source' ? (
                 <div className="source-view-container">
                   <pre><code style={{fontSize: '13px', lineHeight: '1.6'}}>{"```markdown\n" + noteTemplateRaw + "\n```"}</code></pre>
                 </div>
               ) : (
                 <div className="note-iframe-container" style={{height: '100%', width: '100%', position: 'relative', background: 'var(--flat-bg)', overflow: 'hidden'}}>
-                   <iframe ref={iframeRef} src={`${displayDoc.path}?minimal=1`} style={{width: '100%', height: '100%', border: 'none'}} title={displayDoc.title}
+                   <iframe ref={iframeRef} src={`${displayDoc.path}?minimal=1`} 
+                     style={{width: '100%', height: '100%', border: 'none', opacity: iframeLoading ? 0 : 1, transition: 'opacity 0.2s ease-in'}} 
+                     title={displayDoc.title}
                      onLoad={(e) => {
                        const doc = e.target.contentWindow.document;
-                       const katexLink = doc.createElement('link');
-                       katexLink.rel = 'stylesheet'; katexLink.href = 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css';
-                       doc.head.appendChild(katexLink);
                        const style = doc.createElement('style');
                        style.innerHTML = `
                          .navbar, footer, .theme-doc-sidebar-container, nav[aria-label="Breadcrumbs"], .theme-doc-breadcrumbs, .theme-doc-footer-edit-meta-row, .theme-doc-toc-mobile, .theme-doc-toc-desktop, h1 { display: none !important; }
@@ -338,18 +359,18 @@ $$
                          main { padding: 40px 60px !important; width: 100% !important; }
                          article { max-width: none !important; width: 100% !important; }
                          html { scroll-behavior: smooth; font-size: 14px; }
-                         body { font-size: 14px !important; }
-                         .katex { font-family: KaTeX_Main, 'Times New Roman', serif !important; }
+                         body { font-size: 14px !important; background-color: transparent !important; }
                        `;
                        doc.head.appendChild(style);
-                       const extractTOC = () => {
+                       
+                       setTimeout(() => {
+                         setIframeLoading(false);
                          const headings = doc.querySelectorAll('h2, h3');
                          if (headings.length > 0) {
                            const tocItems = Array.from(headings).map(h => ({ text: h.innerText.replace('#', '').trim(), hash: '#' + h.id, level: h.tagName === 'H2' ? 0 : 1 })).filter(item => item.hash !== '#');
                            setNoteTOC(tocItems);
                          }
-                       };
-                       setTimeout(extractTOC, 600);
+                       }, 100);
                      }}
                    />
                 </div>
@@ -363,7 +384,6 @@ $$
                 <div className="greeting-text">{greeting}</div>
                 <div className="stats-grid" style={{display: 'flex', gap: '24px', marginBottom: '64px'}}>
                   <div className="stat-box-mini"><span className="lab">笔记总量</span><span className="val">{statsData.total_papers}</span></div>
-                  <div className="stat-box-mini"><span className="lab">活跃成员</span><span className="val">{statsData.total_members}</span></div>
                 </div>
                 <div style={{borderBottom: '1px solid var(--flat-border)', paddingBottom: '16px', marginBottom: '24px'}}><h3 style={{fontSize: '13px', fontWeight: '900', margin: 0, opacity: 0.3, textTransform: 'uppercase', letterSpacing: '1px'}}>笔记动态</h3></div>
                 {recentNotes.length > 0 ? recentNotes.map((note, i) => <UnifiedNoteItem key={i} note={note} onSelect={setSelectedNote} active={selectedNote?.path === note.path} />) : <div style={{padding: '40px', textAlign: 'center', opacity: 0.3, fontWeight: '800'}}>NO_RECENT_ACTIVITY</div>}
@@ -372,21 +392,10 @@ $$
             {activeTab === 'library' && (
               <div className="view-animate">
                 <div className="library-filter-bar">
-                  <div className="search-wrapper"><div className="search-icon-container"><Icons.Search /></div><input className="search-input" placeholder="检索笔记、标签或作者..." value={query} onChange={(e) => setQuery(e.target.value)} /></div>
+                  <div className="search-wrapper"><div className="search-icon-container"><Icons.Search /></div><input className="search-input" placeholder="检索笔记或标签..." value={query} onChange={(e) => setQuery(e.target.value)} /></div>
                   <select className="flat-select" value={selectedTag} onChange={(e) => setSelectedTag(e.target.value)}>{allTags.map(tag => <option key={tag} value={tag}>{tag}</option>)}</select>
                 </div>
                 <div style={{display: 'flex', flexDirection: 'column'}}>{filteredNotes.map((note, i) => <UnifiedNoteItem key={i} note={note} onSelect={setSelectedNote} active={selectedNote?.path === note.path} />)}</div>
-              </div>
-            )}
-            {activeTab === 'hunters' && (
-              <div className="view-animate">
-                {statsData.leaderboard.map((m, i) => (
-                   <div key={i} className="flat-card-row">
-                      <div className="rank-badge">0{i+1}</div>
-                      <div className="member-info"><div className="name">@{m.name}</div><div className="level">{m.rank} LEVEL</div></div>
-                      <div className="count">{m.count} NOTES</div>
-                   </div>
-                ))}
               </div>
             )}
           </>
