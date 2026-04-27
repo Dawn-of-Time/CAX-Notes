@@ -287,7 +287,7 @@ $$
  - 个人感悟`;
 
   return (
-    <div className="so-container">
+    <div className={`so-container ${isViewingDoc ? 'is-viewing-doc' : ''}`}>
       <aside className="flat-sidebar">
         <div className="sidebar-title-row">
           <div className="sidebar-logo"><Icons.CAD /></div>
