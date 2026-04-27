@@ -4,7 +4,6 @@ import type * as Preset from '@docusaurus/preset-classic';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 
-// CAD 几何风格 Logo
 const cadLogoSvg = `
 <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
   <path d="M16 2L2 10V22L16 30L30 22V10L16 2Z" stroke="#3B82F6" stroke-width="2.5" stroke-linejoin="round"/>
@@ -18,11 +17,12 @@ const config: Config = {
   tagline: 'Precision CAD & CG Research Workstation',
   favicon: 'data:image/svg+xml;base64,' + Buffer.from(cadLogoSvg).toString('base64'),
   url: 'https://paper-quest.example.com',
-  baseUrl: '/',
+  baseUrl: '/', // 恢复为根路径，配合本地服务器使用最稳定
   organizationName: 'paper-team',
   projectName: 'paper-notes',
   onBrokenLinks: 'ignore',
   onBrokenMarkdownLinks: 'warn',
+  trailingSlash: false,
 
   stylesheets: [
     {
@@ -59,23 +59,6 @@ const config: Config = {
         },
       } satisfies Preset.Options,
     ],
-  ],
-
-  headTags: [
-    {
-      tagName: 'script',
-      innerHTML: `
-        (function() {
-          if (window.location.search.indexOf('minimal=1') > -1) {
-            var style = document.createElement('style');
-            style.innerHTML = '.navbar, footer, .theme-doc-sidebar-container, nav[aria-label="Breadcrumbs"], .theme-doc-breadcrumbs, .theme-doc-footer-edit-meta-row, .theme-doc-toc-mobile, .theme-doc-toc-desktop, h1 { display: none !important; } .container, .theme-doc-main-container, .col { max-width: 100% !important; padding: 0 !important; margin: 0 !important; width: 100% !important; } main { padding: 40px 60px !important; width: 100% !important; } article { max-width: none !important; width: 100% !important; } html { scroll-behavior: smooth; font-size: 15px; } body { font-size: 15px !important; background-color: transparent !important; }';
-            document.head.appendChild(style);
-            window.isMinimalMode = true;
-          }
-        })();
-      `,
-      attributes: {},
-    },
   ],
 
   themeConfig: {

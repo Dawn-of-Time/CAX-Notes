@@ -6,6 +6,8 @@
     "docusaurus": "docusaurus",
     "ingest": "node scripts/ingest.js",
     "sync": "node scripts/sync-notes.js",
+    "export": "npm run build && node scripts/export-html.js",
+    "postbuild": "node scripts/export-html.js",
     "update": "npm run ingest && npm run sync",
     "prestart": "npm run ingest && npm run sync",
     "prebuild": "npm run ingest && npm run sync",
