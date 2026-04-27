@@ -773,9 +773,9 @@ button, select, input {
     justify-content: flex-start; 
   }
   
-  /* 笔记详情页在移动端不需要传统的右侧面板 */
-  .is-viewing-doc .flat-right-panel {
-    display: none;
+  /* 移动端彻底取消右侧边栏，释放视野 */
+  .flat-right-panel {
+    display: none !important;
   }
 
   /* 移动端浮动目录按钮 - 移至右下角原主题按钮位 */

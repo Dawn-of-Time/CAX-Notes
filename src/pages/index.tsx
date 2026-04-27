@@ -178,7 +178,7 @@ function WorkstationShell() {
   const displayDoc = selectedNote || { title: '', path: '' };
 
   return (
-    <div className="flat-app-shell">
+    <div className={`flat-app-shell ${isViewingDoc ? 'is-viewing-doc' : ''}`}>
       <aside className="flat-sidebar">
         <div className="sidebar-title-row">
           <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
