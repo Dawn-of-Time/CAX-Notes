@@ -152,6 +152,48 @@ function WorkstationShell() {
   const [noteTOC, setNoteTOC] = useState([]);
   const iframeRef = useRef(null);
   const [iframeLoading, setIframeLoading] = useState(true);
+
+  // --- 路由与历史记录管理 ---
+  useEffect(() => {
+    const handleUrlChange = () => {
+      if (!ExecutionEnvironment.canUseDOM) return;
+      const params = new URLSearchParams(window.location.search);
+      const tab = params.get('tab') || 'dashboard';
+      const notePath = params.get('note');
+      
+      setActiveTab(tab);
+      if (notePath) {
+        // 在所有笔记中查找
+        const found = statsData.notes.find(n => n.path === notePath);
+        // 特殊处理模板
+        if (notePath === '/docs/templates/note-template') {
+          setSelectedNote({ title: '笔记模板', path: '/docs/templates/note-template' });
+        } else {
+          setSelectedNote(found || null);
+        }
+      } else {
+        setSelectedNote(null);
+      }
+    };
+
+    handleUrlChange(); // 初始加载同步
+    window.addEventListener('popstate', handleUrlChange);
+    return () => window.removeEventListener('popstate', handleUrlChange);
+  }, []);
+
+  const updateStateAndUrl = (tab, note = null) => {
+    if (!ExecutionEnvironment.canUseDOM) return;
+    const params = new URLSearchParams();
+    params.set('tab', tab);
+    if (note) params.set('note', note.path || note);
+    
+    const newUrl = window.location.pathname + '?' + params.toString();
+    window.history.pushState({ tab, note }, '', newUrl);
+    
+    setActiveTab(tab);
+    setSelectedNote(note);
+  };
+
   const { colorMode, setColorMode } = useColorMode();
   const [greeting, setGreeting] = useState('开启今日的几何探索之旅。');
   const [query, setQuery] = useState('');
@@ -295,10 +337,10 @@ $$
         </div>
         <div className="sidebar-nav-container">
           <nav className="sidebar-nav-group">
-            <button className={`flat-nav-link ${activeTab === 'dashboard' && !selectedNote ? 'active' : ''}`} onClick={() => { setActiveTab('dashboard'); setSelectedNote(null); }}><Icons.Terminal /> 总览</button>
-            <button className={`flat-nav-link ${activeTab === 'library' && !selectedNote ? 'active' : ''}`} onClick={() => { setActiveTab('library'); setSelectedNote(null); }}><Icons.Library /> 文库</button>
-            <button className={`flat-nav-link ${activeTab === 'template' ? 'active' : ''}`} onClick={() => { setActiveTab('template'); setSelectedNote(null); }}><Icons.Resource /> 笔记模板</button>
-            <button className={`flat-nav-link ${activeTab === 'reference' && !selectedNote ? 'active' : ''}`} onClick={() => { setActiveTab('reference'); setSelectedNote(null); }}><Icons.Resource /> 引用总库</button>
+            <button className={`flat-nav-link ${activeTab === 'dashboard' && !selectedNote ? 'active' : ''}`} onClick={() => updateStateAndUrl('dashboard')}><Icons.Terminal /> 总览</button>
+            <button className={`flat-nav-link ${activeTab === 'library' && !selectedNote ? 'active' : ''}`} onClick={() => updateStateAndUrl('library')}><Icons.Library /> 文库</button>
+            <button className={`flat-nav-link ${activeTab === 'template' ? 'active' : ''}`} onClick={() => updateStateAndUrl('template', { title: '笔记模板', path: '/docs/templates/note-template' })}><Icons.Resource /> 笔记模板</button>
+            <button className={`flat-nav-link ${activeTab === 'reference' && !selectedNote ? 'active' : ''}`} onClick={() => updateStateAndUrl('reference')}><Icons.Resource /> 引用总库</button>
           </nav>
         </div>
         <div className="sidebar-footer">
@@ -317,7 +359,7 @@ $$
                 <div className="doc-header-left">
                     {activeTab !== 'template' && (
                       <nav className="breadcrumb-container" style={{border: 'none', padding: 0}}>
-                        <div className="breadcrumb-item clickable" onClick={() => { setSelectedNote(null); setActiveTab('library'); }}>文库</div>
+                        <div className="breadcrumb-item clickable" onClick={() => updateStateAndUrl('library')}>文库</div>
                         <div className="breadcrumb-item active">{displayDoc.title}</div>
                       </nav>
                     )}
@@ -350,11 +392,36 @@ $$
                      onLoad={(e) => {
                        setIframeLoading(false);
                        const doc = e.target.contentWindow.document;
-                       const headings = doc.querySelectorAll('h2, h3');
-                       if (headings.length > 0) {
-                         const tocItems = Array.from(headings).map(h => ({ text: h.innerText.replace('#', '').trim(), hash: '#' + h.id, level: h.tagName === 'H2' ? 0 : 1 })).filter(item => item.hash !== '#');
-                         setNoteTOC(tocItems);
-                       }
+                       
+                       // 再次注入样式以确保万无一失
+                       const style = doc.createElement('style');
+                       style.innerHTML = `
+                         .navbar, footer, .theme-doc-sidebar-container, nav[aria-label="Breadcrumbs"], .theme-doc-breadcrumbs, .theme-doc-footer-edit-meta-row, .theme-doc-toc-mobile, .theme-doc-toc-desktop, h1, #library { display: none !important; }
+                         .container, .theme-doc-main-container, .col { max-width: 100% !important; padding: 0 !important; margin: 0 !important; width: 100% !important; }
+                         main { padding: 40px 60px !important; width: 100% !important; }
+                         article { max-width: none !important; width: 100% !important; }
+                         html { scroll-behavior: smooth; font-size: 15px; }
+                         body { font-size: 15px !important; background-color: transparent !important; }
+                         .katex { font-family: KaTeX_Main, 'Times New Roman', serif !important; }
+                       `;
+                       doc.head.appendChild(style);
+
+                       // 循环提取目录，因为 Docusaurus 是异步渲染 MDX 的
+                       const extractTOC = () => {
+                         const headings = doc.querySelectorAll('h2, h3');
+                         if (headings.length > 0) {
+                           const tocItems = Array.from(headings).map(h => ({ 
+                             text: h.innerText.replace('#', '').trim(), 
+                             hash: '#' + h.id, 
+                             level: h.tagName === 'H2' ? 0 : 1 
+                           })).filter(item => item.hash !== '#');
+                           setNoteTOC(tocItems);
+                         }
+                       };
+                       
+                       extractTOC();
+                       setTimeout(extractTOC, 500);
+                       setTimeout(extractTOC, 2000); // 确保深度渲染完成后再次提取
                      }}
                    />
                 </div>
@@ -370,7 +437,7 @@ $$
                   <div className="stat-box-mini"><span className="lab">笔记总量</span><span className="val">{statsData.total_papers}</span></div>
                 </div>
                 <div style={{borderBottom: '1px solid var(--flat-border)', paddingBottom: '16px', marginBottom: '24px'}}><h3 style={{fontSize: '13px', fontWeight: '900', margin: 0, opacity: 0.3, textTransform: 'uppercase', letterSpacing: '1px'}}>笔记动态</h3></div>
-                {recentNotes.length > 0 ? recentNotes.map((note, i) => <UnifiedNoteItem key={i} note={note} onSelect={setSelectedNote} active={selectedNote?.path === note.path} />) : <div style={{padding: '40px', textAlign: 'center', opacity: 0.3, fontWeight: '800'}}>NO_RECENT_ACTIVITY</div>}
+                {recentNotes.length > 0 ? recentNotes.map((note, i) => <UnifiedNoteItem key={i} note={note} onSelect={(n) => updateStateAndUrl('dashboard', n)} active={selectedNote?.path === note.path} />) : <div style={{padding: '40px', textAlign: 'center', opacity: 0.3, fontWeight: '800'}}>NO_RECENT_ACTIVITY</div>}
               </div>
             )}
             {activeTab === 'library' && (
@@ -379,7 +446,7 @@ $$
                   <div className="search-wrapper"><div className="search-icon-container"><Icons.Search /></div><input className="search-input" placeholder="检索笔记或标签..." value={query} onChange={(e) => setQuery(e.target.value)} /></div>
                   <select className="flat-select" value={selectedTag} onChange={(e) => setSelectedTag(e.target.value)}>{allTags.map(tag => <option key={tag} value={tag}>{tag}</option>)}</select>
                 </div>
-                <div style={{display: 'flex', flexDirection: 'column'}}>{filteredNotes.map((note, i) => <UnifiedNoteItem key={i} note={note} onSelect={setSelectedNote} active={selectedNote?.path === note.path} />)}</div>
+                <div style={{display: 'flex', flexDirection: 'column'}}>{filteredNotes.map((note, i) => <UnifiedNoteItem key={i} note={note} onSelect={(n) => updateStateAndUrl('library', n)} active={selectedNote?.path === note.path} />)}</div>
               </div>
             )}
           </>

@@ -68,7 +68,7 @@ const config: Config = {
         (function() {
           if (window.location.search.indexOf('minimal=1') > -1) {
             var style = document.createElement('style');
-            style.innerHTML = '.navbar, footer, .theme-doc-sidebar-container, nav[aria-label="Breadcrumbs"], .theme-doc-breadcrumbs, .theme-doc-footer-edit-meta-row, .theme-doc-toc-mobile, .theme-doc-toc-desktop, h1 { display: none !important; } .container, .theme-doc-main-container, .col { max-width: 100% !important; padding: 0 !important; margin: 0 !important; width: 100% !important; } main { padding: 40px 60px !important; width: 100% !important; } article { max-width: none !important; width: 100% !important; } html { scroll-behavior: smooth; font-size: 14px; } body { font-size: 14px !important; background-color: transparent !important; }';
+            style.innerHTML = '.navbar, footer, .theme-doc-sidebar-container, nav[aria-label="Breadcrumbs"], .theme-doc-breadcrumbs, .theme-doc-footer-edit-meta-row, .theme-doc-toc-mobile, .theme-doc-toc-desktop, h1 { display: none !important; } .container, .theme-doc-main-container, .col { max-width: 100% !important; padding: 0 !important; margin: 0 !important; width: 100% !important; } main { padding: 40px 60px !important; width: 100% !important; } article { max-width: none !important; width: 100% !important; } html { scroll-behavior: smooth; font-size: 15px; } body { font-size: 15px !important; background-color: transparent !important; }';
             document.head.appendChild(style);
             window.isMinimalMode = true;
           }
