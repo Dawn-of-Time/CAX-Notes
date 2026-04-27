@@ -21,6 +21,7 @@ const Icons = {
   Sun: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>,
   Moon: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>,
   Search: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>,
+  List: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>,
 };
 
 function UnifiedNoteItem({ note, onSelect, active }) {
@@ -100,6 +101,7 @@ function WorkstationShell() {
   const { colorMode, setColorMode } = useColorMode();
   const [query, setQuery] = useState('');
   const [selectedTag, setSelectedTag] = useState('全部标签');
+  const [showMobileTOC, setShowMobileTOC] = useState(false);
 
   // 初始化 URL 处理
   useEffect(() => {
@@ -161,13 +163,18 @@ function WorkstationShell() {
     <div className="flat-app-shell">
       <aside className="flat-sidebar">
         <div className="sidebar-title-row">
-          <Icons.CAD />
-          <h1 className="sidebar-main-title">CAD & CG 研习录</h1>
+          <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
+            <Icons.CAD />
+            <h1 className="sidebar-main-title">CAD & CG 研习录</h1>
+          </div>
+          <button className="mobile-theme-toggle" onClick={() => setColorMode(colorMode === 'dark' ? 'light' : 'dark')}>
+            {colorMode === 'dark' ? <Icons.Sun /> : <Icons.Moon />}
+          </button>
         </div>
 
         <nav className="sidebar-nav">
-          <button className={`flat-nav-link ${activeTab === 'dashboard' && !isViewingDoc ? 'active' : ''}`} onClick={() => updateStateAndUrl('dashboard')}><Icons.Terminal /> 总览</button>
-          <button className={`flat-nav-link ${activeTab === 'library' && !isViewingDoc ? 'active' : ''}`} onClick={() => updateStateAndUrl('library')}><Icons.Library /> 文库</button>
+          <button className={`flat-nav-link ${activeTab === 'dashboard' ? 'active' : ''}`} onClick={() => updateStateAndUrl('dashboard')}><Icons.Terminal /> 总览</button>
+          <button className={`flat-nav-link ${activeTab === 'library' ? 'active' : ''}`} onClick={() => updateStateAndUrl('library')}><Icons.Library /> 文库</button>
           <button className={`flat-nav-link ${activeTab === 'template' ? 'active' : ''}`} onClick={() => updateStateAndUrl('template', { title: '笔记模板', path: '/docs/templates/note-template' })}><Icons.Resource /> 笔记模板</button>
           <button className={`flat-nav-link ${activeTab === 'reference' ? 'active' : ''}`} onClick={() => updateStateAndUrl('reference', { title: '引用总库', path: '/docs/reference/library' })}><Icons.Reference /> 引用总库</button>
         </nav>
@@ -180,9 +187,37 @@ function WorkstationShell() {
         </div>
       </aside>
 
-      <main className={`flat-main-stage ${isViewingDoc ? 'no-padding' : ''}`}>
+      <main className={`flat-main-stage ${isViewingDoc ? 'no-padding' : ''} ${isViewingDoc ? 'is-viewing-doc' : ''}`}>
         {isViewingDoc ? (
           <div className="view-animate" style={{height: '100%', display: 'flex', flexDirection: 'column'}}>
+            {/* 移动端目录按钮 */}
+            {noteTOC.length > 0 && (
+              <button className="mobile-toc-toggle" onClick={() => setShowMobileTOC(true)}>
+                <Icons.List />
+              </button>
+            )}
+
+            {/* 移动端目录弹出层 */}
+            {showMobileTOC && (
+              <div className="mobile-toc-modal" onClick={() => setShowMobileTOC(false)}>
+                <div className="mobile-toc-content" onClick={e => e.stopPropagation()}>
+                  <div className="mobile-toc-header">
+                    <span style={{fontWeight: 800}}>文档目录</span>
+                    <button className="mobile-toc-close" onClick={() => setShowMobileTOC(false)}>×</button>
+                  </div>
+                  <div className="custom-toc-container">
+                    {noteTOC.map((item, i) => (
+                      <div key={i} 
+                        className={`toc-item level-${item.level}`} 
+                        onClick={() => { handleTOCClick(item.hash); setShowMobileTOC(false); }}>
+                        {item.text}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
             {activeTab !== 'reference' && (
               <div className="doc-view-header" style={activeTab === 'template' ? {justifyContent: 'center'} : {}}>
                 <div className="doc-header-left">
@@ -229,7 +264,8 @@ function WorkstationShell() {
                            .navbar, footer, .theme-doc-sidebar-container, nav[aria-label="Breadcrumbs"], .theme-doc-breadcrumbs, .theme-doc-footer-edit-meta-row, .theme-doc-toc-mobile, .theme-doc-toc-desktop, h1, #library { display: none !important; }
                            .container, .theme-doc-main-container, .col { max-width: 100% !important; padding: 0 !important; margin: 0 !important; width: 100% !important; }
                            main { padding: 24px 60px !important; width: 100% !important; }
-                           article { max-width: none !important; width: 100% !important; }                           html { scroll-behavior: smooth; font-size: 15px; }
+                           article { max-width: none !important; width: 100% !important; }
+                           html { scroll-behavior: smooth; font-size: 15px; }
                            body { font-size: 15px !important; background-color: transparent !important; }
                            .katex { font-family: KaTeX_Main, 'Times New Roman', serif !important; }
 
@@ -270,7 +306,8 @@ function WorkstationShell() {
                            [class*='admonitionContent'] > *:first-child { margin-top: 2px !important; }
                            [class*='admonitionContent'] p { margin: 0 !important; }
                            [class*='admonitionContent'] > *:last-child { margin-bottom: 0 !important; }
-                         `;                         doc.head.appendChild(style);
+                         `;
+                         doc.head.appendChild(style);
 
                          // 2. 提取目录 (优化提取逻辑：增加重试以兼容 React 渲染)
                          const extractTOC = () => {
