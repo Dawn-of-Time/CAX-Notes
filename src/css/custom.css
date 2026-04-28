@@ -47,6 +47,11 @@ button, select, input {
   font-family: inherit;
 }
 
+/* KaTeX fix: hide MathML to prevent double rendering when CSS is slow to load or blocked */
+.katex-mathml {
+  display: none !important;
+}
+
 .flat-app-shell { display: flex; height: 100vh; width: 100vw; overflow: hidden; }
 
 /* --- Sidebar --- */

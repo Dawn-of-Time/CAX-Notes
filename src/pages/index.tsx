@@ -281,6 +281,11 @@ function WorkstationShell() {
                            const doc = e.target.contentWindow.document;
                            
                            // 1. 注入样式
+                           const link = doc.createElement('link');
+                           link.rel = 'stylesheet';
+                           link.href = 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css';
+                           doc.head.appendChild(link);
+
                            const style = doc.createElement('style');
                            style.innerHTML = `
                              .navbar, footer, .theme-doc-sidebar-container, 
@@ -292,7 +297,6 @@ function WorkstationShell() {
                              article { max-width: none !important; width: 100% !important; }
                              html { scroll-behavior: smooth; font-size: 15px; }
                              body { font-size: 15px !important; background-color: transparent !important; }
-                             .katex { font-family: KaTeX_Main, 'Times New Roman', serif !important; }
 
                              /* 注入 Admonition 优化 (极致紧凑版) */
                              [class*='admonition'] { padding: 6px 12px !important; margin: 0.5rem 0 !important; border-radius: 4px !important; }
