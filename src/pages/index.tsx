@@ -380,7 +380,7 @@ function WorkstationShell() {
           <>
             {activeTab === 'dashboard' && (
               <div className="view-animate">
-                {greeting && <div className="greeting-text">{greeting}</div>}
+                <div className="greeting-text">{greeting}</div>
                 <div style={{borderBottom: '1px solid var(--flat-border)', paddingBottom: '16px', marginBottom: '24px'}}><h3 style={{fontSize: '13px', fontWeight: '900', margin: 0, opacity: 0.3, textTransform: 'uppercase', letterSpacing: '1px'}}>笔记动态</h3></div>
                 {recentNotes.length > 0 ? recentNotes.map((note, i) => <UnifiedNoteItem key={i} note={note} onSelect={(n) => updateStateAndUrl('dashboard', n)} active={selectedNote?.path === note.path} />) : <div style={{padding: '40px', textAlign: 'center', opacity: 0.3, fontWeight: '800'}}>NO_RECENT_ACTIVITY</div>}
               </div>

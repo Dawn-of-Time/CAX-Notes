@@ -16,9 +16,14 @@
       "date": "2026-05-11"
     },
     {
-      "title": "Anewpoint containment test algorithm based on preprocessing and",
+      "title": "Anewpoint containment test algorithm based on preprocessing and determining triangles",
       "path": "/docs/2026/11",
-      "tags": [],
+      "tags": [
+        "轮廓重建",
+        "缺面修复",
+        "点与多面体位置关系判定",
+        "八叉树"
+      ],
       "date": "2026-05-11"
     },
     {
@@ -120,7 +125,7 @@
       "date": "2026-05-11"
     },
     {
-      "title": "Anewpoint containment test algorithm based on preprocessing and",
+      "title": "Anewpoint containment test algorithm based on preprocessing and determining triangles",
       "date": "2026-05-11"
     },
     {
