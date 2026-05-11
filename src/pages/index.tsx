@@ -430,6 +430,11 @@ function WorkstationShell() {
 }
 
 export default function Home(): JSX.Element {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) return null; // 服务端返回完全空白，避免骨架闪烁
+
   return (
     <Layout title="科研控制台" noFooter>
       <WorkstationShell />
