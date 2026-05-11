@@ -176,13 +176,13 @@ function WorkstationShell() {
     });
   }, [selectedTag, query]);
 
-  const [greeting] = useState(() => {
-    if (!ExecutionEnvironment.canUseDOM) return "你好，CAD 研习生";
+  const [greeting, setGreeting] = useState('');
+  useEffect(() => {
     const hour = new Date().getHours();
-    if (hour >= 5 && hour < 12) return "早上好！保持专注，今天也是精进算法与模型的好时机。";
-    if (hour >= 12 && hour < 18) return "下午好！攻坚克难，让几何逻辑更进一步。";
-    return "晚上好！沉淀思考，在代码与模型中寻找突破。";
-  });
+    if (hour >= 5 && hour < 12) setGreeting("早上好！保持专注，今天也是精进算法与模型的好时机。");
+    else if (hour >= 12 && hour < 18) setGreeting("下午好！攻坚克难，让几何逻辑更进一步。");
+    else setGreeting("晚上好！沉淀思考，在代码与模型中寻找突破。");
+  }, []);
 
   const noteTemplateRaw = statsData.template_raw;
   const isViewingDoc = !!selectedNote;
