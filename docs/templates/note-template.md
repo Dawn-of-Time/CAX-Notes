@@ -21,10 +21,12 @@ tags:
 ### 2.1 正文
 正文段落间需要空一行，否则将视为同一段落。
 
+若要加粗文字，请采用<strong>加粗文字</strong>，**加粗文字**会在一些情况下失效。
+
 ### 2.2 图
 引用图时，可如此表达：如[图2-1](#figure2-1)所示。括号中的内容是图id。格式如下：
 <figure id="figure2-1">
-  <img src="./images/2-1图链接.png"/>
+  <img src="./2-1图链接.png"/>
   <figcaption>图2-1 图题</figcaption>
 </figure>
 
@@ -34,16 +36,16 @@ $x$——一级标题编号；
 $y$——图序号（即第几幅图。计数自1起，并在跨越章后重置）。
 :::
 
-若图含子图，可如此表达：如[图2-2](#figure1-2)、[图2-2(a)](#figure1-2a)、[图2-2(b)](#figure1-2b)所示。图格式如下：
+若图含子图，可如此表达：如[图2-2](#figure2-2)、[图2-2(a)](#figure2-2a)、[图2-2(b)](#figure2-2b)所示。图格式如下：
 
 <figure id="figure2-2">
   <figure id="figure2-2a">
-    <img src="./images/2-2(a)图名.png"/>
+    <img src="./2-2(a)图名.png"/>
     <figcaption>图2-2(a) 子图</figcaption>
   </figure>
 
   <figure id="figure2-2b">
-    <img src="./images/2-2(b)图名.png"/>
+    <img src="./2-2(b)图名.png"/>
     <figcaption>图2-2(b) 子图</figcaption>
   </figure>
 
@@ -77,7 +79,7 @@ $$
 未尽事宜，可前往Docusaurus官网查阅资料，或在搜索引擎中查找有关markdown的语法。
 
 ## 3 内容要素
-笔记内容可参考下述要素撰写：
+笔记内容须参考下述要素撰写：
  - 解决何问题
  - 大致采取何方法
  - 优势与不足

@@ -1,7 +1,71 @@
 {
-  "total_papers": 5,
-  "template_raw": "---\r\ntitle: 论文题目\r\ntags:\r\n  - tag1\r\n  - tag2\r\n---\r\n\r\n:::tip[资料卡]\r\n - 会议/期刊：\r\n - 其他信息1：\r\n - 其他信息2：\r\n:::\r\n\r\n## 1 一级标题\r\n### 1.1 二级标题\r\n#### （1）三级标题\r\n\r\n正文。\r\n\r\n## 2 格式规范\r\n### 2.1 正文\r\n正文段落间需要空一行，否则将视为同一段落。\r\n\r\n### 2.2 图\r\n引用图时，可如此表达：如[图2-1](#figure2-1)所示。括号中的内容是图id。格式如下：\r\n<figure id=\"figure2-1\">\r\n  <img src=\"./images/2-1图链接.png\"/>\r\n  <figcaption>图2-1 图题</figcaption>\r\n</figure>\r\n\r\n:::info[图编号的含义]\r\n记图编号为图$x-y$，其中：\r\n$x$——一级标题编号；\r\n$y$——图序号（即第几幅图。计数自1起，并在跨越章后重置）。\r\n:::\r\n\r\n若图含子图，可如此表达：如[图2-2](#figure1-2)、[图2-2(a)](#figure1-2a)、[图2-2(b)](#figure1-2b)所示。图格式如下：\r\n\r\n<figure id=\"figure2-2\">\r\n  <figure id=\"figure2-2a\">\r\n    <img src=\"./images/2-2(a)图名.png\"/>\r\n    <figcaption>图2-2(a) 子图</figcaption>\r\n  </figure>\r\n\r\n  <figure id=\"figure2-2b\">\r\n    <img src=\"./images/2-2(b)图名.png\"/>\r\n    <figcaption>图2-2(b) 子图</figcaption>\r\n  </figure>\r\n\r\n  <figcaption>图2-2 含子图的图</figcaption>\r\n</figure>\r\n\r\n### 2.3 表\r\n引用表时，可如此表达：如[表2-1](#table2-1)所示。括号中的内容是表id。表格式如下：\r\n\r\n<table id=\"table2-1\">\r\n  <caption>表2-1 表题</caption>\r\n  <thead>\r\n    <tr><th>表头第一列</th><th>表头第二列</th></tr>\r\n  </thead>\r\n  <tbody>\r\n    <tr><td>表身第一行第一列内容</td><td>表身第一行第二列内容</td></tr>\r\n    <tr><td>表身第二行第一列内容</td><td>表身第二行第二列内容</td></tr>\r\n  </tbody>\r\n</table>\r\n\r\n表编号的含义与图相仿。\r\n\r\n### 2.4 公式\r\n公式使用示例：设$R_a$是由于环境光照产生的结果强度曲线，$L_c$是环境光的强度曲线，$O_a$是物体的颜色曲线，则环境光照公式为：\r\n\r\n$$\r\nR_a = L_c \\cdot O_a\r\n$$ \r\n\r\n### 2.5 其他\r\n未尽事宜，可前往Docusaurus官网查阅资料，或在搜索引擎中查找有关markdown的语法。\r\n\r\n## 3 内容要素\r\n笔记内容可参考下述要素撰写：\r\n - 解决何问题\r\n - 大致采取何方法\r\n - 优势与不足\r\n - 创新点[Optional]\r\n - 个人感悟",
+  "total_papers": 11,
+  "template_raw": "---\r\ntitle: 论文题目\r\ntags:\r\n  - tag1\r\n  - tag2\r\n---\r\n\r\n:::tip[资料卡]\r\n - 会议/期刊：\r\n - 其他信息1：\r\n - 其他信息2：\r\n:::\r\n\r\n## 1 一级标题\r\n### 1.1 二级标题\r\n#### （1）三级标题\r\n\r\n正文。\r\n\r\n## 2 格式规范\r\n### 2.1 正文\r\n正文段落间需要空一行，否则将视为同一段落。\r\n\r\n若要加粗文字，请采用<strong>加粗文字</strong>，**加粗文字**会在一些情况下失效。\r\n\r\n### 2.2 图\r\n引用图时，可如此表达：如[图2-1](#figure2-1)所示。括号中的内容是图id。格式如下：\r\n<figure id=\"figure2-1\">\r\n  <img src=\"./2-1图链接.png\"/>\r\n  <figcaption>图2-1 图题</figcaption>\r\n</figure>\r\n\r\n:::info[图编号的含义]\r\n记图编号为图$x-y$，其中：\r\n$x$——一级标题编号；\r\n$y$——图序号（即第几幅图。计数自1起，并在跨越章后重置）。\r\n:::\r\n\r\n若图含子图，可如此表达：如[图2-2](#figure2-2)、[图2-2(a)](#figure2-2a)、[图2-2(b)](#figure2-2b)所示。图格式如下：\r\n\r\n<figure id=\"figure2-2\">\r\n  <figure id=\"figure2-2a\">\r\n    <img src=\"./2-2(a)图名.png\"/>\r\n    <figcaption>图2-2(a) 子图</figcaption>\r\n  </figure>\r\n\r\n  <figure id=\"figure2-2b\">\r\n    <img src=\"./2-2(b)图名.png\"/>\r\n    <figcaption>图2-2(b) 子图</figcaption>\r\n  </figure>\r\n\r\n  <figcaption>图2-2 含子图的图</figcaption>\r\n</figure>\r\n\r\n### 2.3 表\r\n引用表时，可如此表达：如[表2-1](#table2-1)所示。括号中的内容是表id。表格式如下：\r\n\r\n<table id=\"table2-1\">\r\n  <caption>表2-1 表题</caption>\r\n  <thead>\r\n    <tr><th>表头第一列</th><th>表头第二列</th></tr>\r\n  </thead>\r\n  <tbody>\r\n    <tr><td>表身第一行第一列内容</td><td>表身第一行第二列内容</td></tr>\r\n    <tr><td>表身第二行第一列内容</td><td>表身第二行第二列内容</td></tr>\r\n  </tbody>\r\n</table>\r\n\r\n表编号的含义与图相仿。\r\n\r\n### 2.4 公式\r\n公式使用示例：设$R_a$是由于环境光照产生的结果强度曲线，$L_c$是环境光的强度曲线，$O_a$是物体的颜色曲线，则环境光照公式为：\r\n\r\n$$\r\nR_a = L_c \\cdot O_a\r\n$$ \r\n\r\n### 2.5 其他\r\n未尽事宜，可前往Docusaurus官网查阅资料，或在搜索引擎中查找有关markdown的语法。\r\n\r\n## 3 内容要素\r\n笔记内容须参考下述要素撰写：\r\n - 解决何问题\r\n - 大致采取何方法\r\n - 优势与不足\r\n - 创新点[Optional]\r\n - 个人感悟",
   "notes": [
+    {
+      "title": "Large Language Models for Computer-Aided Design: A Survey",
+      "path": "/docs/2026/10",
+      "tags": [
+        "LLM",
+        "CAD",
+        "Survey",
+        "综述",
+        "代码生成",
+        "参数化建模"
+      ],
+      "date": "2026-05-11"
+    },
+    {
+      "title": "Anewpoint containment test algorithm based on preprocessing and",
+      "path": "/docs/2026/11",
+      "tags": [],
+      "date": "2026-05-11"
+    },
+    {
+      "title": "DeepCAD：面向计算机辅助设计模型的深度生成网络",
+      "path": "/docs/2026/6",
+      "tags": [
+        "深度生成模型",
+        "CAD",
+        "Transformer",
+        "3D形状生成"
+      ],
+      "date": "2026-05-11"
+    },
+    {
+      "title": "Rule-based feature recognition for 2·5D machined components",
+      "path": "/docs/2026/7",
+      "tags": [
+        "特征识别",
+        "2.5D加工",
+        "基于规则",
+        "B-rep模型"
+      ],
+      "date": "2026-05-11"
+    },
+    {
+      "title": "An Approach for Feature Semantics Recognition in Geometric Models",
+      "path": "/docs/2026/8",
+      "tags": [
+        "Feature Recognition",
+        "CAD",
+        "Semantic Recognition",
+        "B-rep",
+        "Knowledge Extraction"
+      ],
+      "date": "2026-05-11"
+    },
+    {
+      "title": "几何与形状特征识别工具在面向装配设计方法中的应用",
+      "path": "/docs/2026/9",
+      "tags": [
+        "DFA",
+        "Feature Recognition",
+        "CAD",
+        "FuzzyDFA"
+      ],
+      "date": "2026-05-11"
+    },
     {
       "title": "Recognizing Manufacturing Features from a Design-by-Feature Model",
       "path": "/docs/2026/4",
@@ -52,24 +116,24 @@
   ],
   "recent_activities": [
     {
-      "title": "Recognizing Manufacturing Features from a Design-by-Feature Model",
-      "date": "2026-04-28"
+      "title": "Large Language Models for Computer-Aided Design: A Survey",
+      "date": "2026-05-11"
     },
     {
-      "title": "Recognition of Maximal Features by Volume Decomposition",
-      "date": "2026-04-28"
+      "title": "Anewpoint containment test algorithm based on preprocessing and",
+      "date": "2026-05-11"
     },
     {
-      "title": "Abstraction of Mid-Surfaces from Solid Models of Thin-Walled Parts Adivide-and-Conquer Approach",
-      "date": "2026-04-27"
+      "title": "DeepCAD：面向计算机辅助设计模型的深度生成网络",
+      "date": "2026-05-11"
     },
     {
-      "title": "Automatic Solid Decomposition and Reduction for Non-Manifold",
-      "date": "2026-04-27"
+      "title": "Rule-based feature recognition for 2·5D machined components",
+      "date": "2026-05-11"
     },
     {
-      "title": "CADSmith: Multi-Agent CAD Generation with Programmatic Geometric Validation",
-      "date": "2026-04-26"
+      "title": "An Approach for Feature Semantics Recognition in Geometric Models",
+      "date": "2026-05-11"
     }
   ]
 }
