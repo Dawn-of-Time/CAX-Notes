@@ -106,8 +106,8 @@ function WorkstationShell() {
   // 用于彻底解决 404 闪烁的延迟路径状态
   const [iframeSrc, setIframeSrc] = useState('');
 
-  // 初始化 URL 处理
-  useEffect(() => {
+  // 初始化 URL 处理与监听回退
+  const syncStateFromUrl = () => {
     const params = new URLSearchParams(window.location.search);
     const tab = params.get('tab') || 'dashboard';
     const docPath = params.get('doc');
@@ -128,7 +128,16 @@ function WorkstationShell() {
         setSelectedNote({ title: '引用总库', path: '/docs/reference/library' });
         setIframeSrc('/docs/reference/library?minimal=1');
       }
+    } else {
+      setSelectedNote(null);
+      setIframeSrc('');
     }
+  };
+
+  useEffect(() => {
+    syncStateFromUrl();
+    window.addEventListener('popstate', syncStateFromUrl);
+    return () => window.removeEventListener('popstate', syncStateFromUrl);
   }, []);
 
   const updateStateAndUrl = (tab, note = null) => {
@@ -141,7 +150,9 @@ function WorkstationShell() {
     const params = new URLSearchParams();
     params.set('tab', tab);
     if (note) params.set('doc', note.path);
-    window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
+    
+    // 使用 pushState 而非 replaceState，从而保留历史记录
+    window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
     
     if (note) {
       // 给予 50ms 缓冲，确保状态同步后再加载
@@ -264,7 +275,7 @@ function WorkstationShell() {
               )}
               {activeTab === 'template' && templateViewMode === 'source' ? (
                 <div className="source-view-container">
-                  <pre><code style={{fontSize: '13px', lineHeight: '1.6'}}>{"```markdown\n" + noteTemplateRaw + "\n```"}</code></pre>
+                  <pre><code style={{fontSize: '13px', lineHeight: '1.6'}}>{noteTemplateRaw}</code></pre>
                 </div>
               ) : (
                 <div className="note-iframe-container" style={{
