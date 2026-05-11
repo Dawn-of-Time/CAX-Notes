@@ -52,11 +52,11 @@ function UnifiedNoteItem({ note, onSelect, active }) {
 }
 
 function MonthlyCalendar({ notes }) {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = now.getMonth();
+  const [viewDate, setViewDate] = useState(new Date());
+  
+  const year = viewDate.getFullYear();
+  const month = viewDate.getMonth();
+
   const dayCounts = useMemo(() => {
     const counts = {};
     notes.forEach(note => {
@@ -68,13 +68,30 @@ function MonthlyCalendar({ notes }) {
     });
     return counts;
   }, [notes, year, month]);
-  if (!mounted) return <div className="calendar-container" style={{height: '240px'}} />;
+
   const firstDay = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const days = Array.from({length: firstDay}, () => null).concat(Array.from({length: daysInMonth}, (_, i) => i + 1));
+
+  const changeMonth = (offset) => {
+    setViewDate(new Date(year, month + offset, 1));
+  };
+
   return (
     <div className="calendar-container">
-      <div className="calendar-title">科研活跃度 · {now.toLocaleString('zh-CN', { month: 'long' })}</div>
+      <div className="calendar-nav-header">
+        <div className="calendar-title-group">
+          <span className="calendar-title-main">{year} 科研活跃度 · {viewDate.toLocaleString('zh-CN', { month: 'long' })}</span>
+        </div>
+        <div className="calendar-controls">
+          <button className="cal-btn" onClick={() => changeMonth(-1)}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+          <button className="cal-btn" onClick={() => changeMonth(1)}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        </div>
+      </div>
       <div className="calendar-header-weeks">{['日', '一', '二', '三', '四', '五', '六'].map(d => <span key={d}>{d}</span>)}</div>
       <div className="flat-calendar-grid">
         {days.map((day, i) => {
@@ -166,7 +183,7 @@ function WorkstationShell() {
     }
   };
 
-  const recentNotes = useMemo(() => statsData.notes.slice(0, 5), []);
+  const recentNotes = useMemo(() => statsData.notes.slice(0, 10), []);
   const allTags = useMemo(() => ['全部标签', ...new Set(statsData.notes.flatMap(n => n.tags))], []);
   const filteredNotes = useMemo(() => {
     return statsData.notes.filter(n => {

@@ -424,8 +424,71 @@ button, select, input {
   background-size: 30px 100%;
   opacity: 0.2;
 }
+.calendar-nav-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.calendar-title-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.calendar-title-main {
+  font-size: 13px;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: var(--flat-primary);
+  letter-spacing: 0.5px;
+}
+
+.calendar-controls {
+  display: flex;
+  gap: 4px;
+}
+
+.cal-btn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  border: 1px solid var(--flat-border);
+  background: var(--flat-bg);
+  color: var(--flat-fg);
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 0;
+}
+
+.cal-btn:hover {
+  border-color: var(--flat-primary);
+  color: var(--flat-primary);
+  background: var(--flat-primary-bg);
+}
+
+.cal-btn svg {
+  opacity: 0.6;
+}
+
+.cal-btn:hover svg {
+  opacity: 1;
+}
+
 /* 热力图对齐 */
-.calendar-header-weeks { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; font-size: 10px; font-weight: 900; opacity: 0.2; margin-bottom: 8px; }
+.calendar-header-weeks { 
+  display: grid; 
+  grid-template-columns: repeat(7, 1fr); 
+  gap: 4px; 
+  text-align: center; 
+  font-size: 10px; 
+  font-weight: 900; 
+  opacity: 0.2; 
+  margin-bottom: 8px; 
+}
 .flat-calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
 .calendar-day-cell { aspect-ratio: 1; border-radius: 4px; background: var(--flat-bg); font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; position: relative; }
 .calendar-day-cell.lvl-1 { background: #dbeafe; color: #1e40af; }
@@ -851,4 +914,30 @@ button, select, input {
 /* --- 移除笔记详情页面的上一页和下一页 --- */
 .pagination-nav {
   display: none !important;
+}
+
+/* --- Custom Scrollbar --- */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--flat-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--flat-border);
+  border-radius: 10px;
+  border: 2px solid var(--flat-bg);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--flat-primary);
+}
+
+/* Firefox support */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--flat-border) var(--flat-bg);
 }
