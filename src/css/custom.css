@@ -1,21 +1,21 @@
-/**
+﻿/**
  * CAD & CG Research Workstation - Industrial Flat UI (Final Reconstruction)
  */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap');
 
-/* --- 强制移除全站顶部导航 --- */
+/* --- 寮哄埗绉婚櫎鍏ㄧ珯椤堕儴瀵艰埅 --- */
 .navbar { display: none !important; }
 
 :root {
   --ifm-color-primary: #3b82f6;
-  --flat-bg: #fcfdfe; /* 更浅、更干净的底色 */
-  --flat-sidebar-bg: #f8fafc; /* 侧边栏调深，形成“框架”感 */
+  --flat-bg: #fcfdfe; /* 鏇存祬銆佹洿骞插噣鐨勫簳鑹?*/
+  --flat-sidebar-bg: #f8fafc; /* 渚ц竟鏍忚皟娣憋紝褰㈡垚鈥滄鏋垛€濇劅 */
   --flat-primary: #3b82f6;
   --flat-primary-bg: #eff6ff;
   --flat-border: #e2e8f0;
   --flat-fg: #1e293b;
-  --flat-muted: #f1f5f9; /* 较深的灰色，用于按钮等元素 */
+  --flat-muted: #f1f5f9; /* 杈冩繁鐨勭伆鑹诧紝鐢ㄤ簬鎸夐挳绛夊厓绱?*/
   --flat-accent: #f59e0b;
   --flat-secondary: #10b981;
   --ifm-font-family-base: "Inter", "Noto Sans SC", system-ui, -apple-system, sans-serif;
@@ -27,7 +27,7 @@
 
 [data-theme='dark'] {
   --flat-bg: #0b0e14;
-  --flat-sidebar-bg: #111827; /* 侧边栏更深 */
+  --flat-sidebar-bg: #111827; /* 渚ц竟鏍忔洿娣?*/
   --flat-primary: #60a5fa;
   --flat-primary-bg: rgba(96, 165, 250, 0.1);
   --flat-border: #1f2937;
@@ -100,7 +100,7 @@ button, select, input {
   pointer-events: none;
 }
 .sidebar-title-row { display: flex; align-items: center; gap: 12px; margin-bottom: 48px; padding-left: 10px; }
-.mobile-theme-toggle { display: none; } /* 桌面端隐藏 */
+.mobile-theme-toggle { display: none; } /* 妗岄潰绔殣钘?*/
 .sidebar-logo { flex-shrink: 0; display: flex; align-items: center; color: var(--flat-primary); }
 .sidebar-main-title { font-size: 18px; font-weight: 900; margin: 0; white-space: nowrap; letter-spacing: -0.5px; }
 
@@ -172,7 +172,7 @@ button, select, input {
   line-height: 1.2;
 }
 
-/* --- 右侧边栏卡片统一样式 --- */.calendar-container, .flat-stats-card {
+/* --- 鍙充晶杈规爮鍗＄墖缁熶竴鏍峰紡 --- */.calendar-container, .flat-stats-card {
   background: #ffffff;
   border: 1px solid var(--flat-border);
   border-radius: 10px;
@@ -187,7 +187,7 @@ button, select, input {
   background: var(--flat-sidebar-bg); 
 }
 
-/* 统计卡片与标题样式统一 */
+/* 缁熻鍗＄墖涓庢爣棰樻牱寮忕粺涓€ */
 .flat-stats-card {
   display: flex;
   flex-direction: column;
@@ -221,7 +221,7 @@ button, select, input {
   opacity: 0.3;
 }
 
-/* --- 笔记项 --- */
+/* --- 绗旇椤?--- */
 .unified-note-item { 
   padding: 16px 20px; 
   background: #ffffff; 
@@ -243,7 +243,7 @@ button, select, input {
   bottom: 0;
   width: 4px;
   background: var(--flat-primary);
-  opacity: 1; /* 常驻 */
+  opacity: 1; /* 甯搁┗ */
 }
 
 .unified-note-item.active {
@@ -259,8 +259,8 @@ button, select, input {
   font-size: 18px; 
   font-weight: 500; 
   color: var(--flat-fg);
-  display: block; /* 恢复为 block 以使 text-overflow 生效 */
-  padding-left: 14px; /* 为图标留出空间 */
+  display: block; /* 鎭㈠涓?block 浠ヤ娇 text-overflow 鐢熸晥 */
+  padding-left: 14px; /* 涓哄浘鏍囩暀鍑虹┖闂?*/
   position: relative;
   margin-bottom: 12px; 
   line-height: 1.4;
@@ -287,13 +287,13 @@ button, select, input {
 
 .note-link-title:hover {
   color: var(--flat-primary);
-  padding-left: 20px; /* 悬停时通过内边距产生位移感 */
+  padding-left: 20px; /* 鎮仠鏃堕€氳繃鍐呰竟璺濅骇鐢熶綅绉绘劅 */
   text-decoration: none !important;
 }
 
 .note-link-title:hover::before {
   opacity: 1;
-  left: 6px; /* 图标跟随位移 */
+  left: 6px; /* 鍥炬爣璺熼殢浣嶇Щ */
   transform: translateY(-50%) scale(1.5);
   box-shadow: 0 0 8px var(--flat-primary);
 }
@@ -304,12 +304,12 @@ button, select, input {
   gap: 8px; 
   overflow: hidden; 
   padding: 4px 0;
-  width: 100%; /* 关键：改为100%，使渐变锚点固定在容器右侧而非内容边缘 */
+  width: 100%; /* 鍏抽敭锛氭敼涓?00%锛屼娇娓愬彉閿氱偣鍥哄畾鍦ㄥ鍣ㄥ彸渚ц€岄潪鍐呭杈圭紭 */
   background: transparent;
   mask-image: linear-gradient(to right, black 90%, transparent 100%);
   -webkit-mask-image: linear-gradient(to right, black 90%, transparent 100%);
 }
-.mobile-toc-toggle { display: none; } /* 桌面端默认彻底隐藏 */
+.mobile-toc-toggle { display: none; } /* 妗岄潰绔粯璁ゅ交搴曢殣钘?*/
 .flat-tag { 
   font-size: 11px; 
   font-weight: 500; 
@@ -332,7 +332,7 @@ button, select, input {
   justify-content: center;
   padding-left: 32px;
   margin-left: 8px;
-  border-left: 1px dashed var(--flat-border); /* 使用虚线分割，更显精致 */
+  border-left: 1px dashed var(--flat-border); /* 浣跨敤铏氱嚎鍒嗗壊锛屾洿鏄剧簿鑷?*/
 }
 
 .note-date-badge {
@@ -363,7 +363,7 @@ button, select, input {
 }
 
 
-/* 响应式适配移动端日期 */
+/* 鍝嶅簲寮忛€傞厤绉诲姩绔棩鏈?*/
 @media (max-width: 1024px) {
   .note-date-badge {
     gap: 8px;
@@ -376,13 +376,224 @@ button, select, input {
 [data-theme='dark'] .note-date-badge { background: transparent; border-color: transparent; }
 [data-theme='dark'] .note-date-badge .date-year { color: #ffffff; }
 
-/* --- 搜索与筛选 --- */
-.library-filter-bar { display: flex; gap: 12px; margin-bottom: 32px; height: 48px; }
+/* --- 鎼滅储涓庣瓫閫?--- */
+.library-filter-container { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+.library-filter-row { display: flex; gap: 12px; height: 48px; align-items: center; }
+.library-filter-row.second-row { 
+  height: 48px; 
+  background: #ffffff;
+  border: 1px solid var(--flat-border);
+  border-radius: 6px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+[data-theme='dark'] .library-filter-row.second-row {
+  background: var(--flat-sidebar-bg);
+}
+
+.date-range-label {
+  font-size: 12px;
+  font-weight: 900;
+  color: #000000;
+  margin-right: 16px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+[data-theme='dark'] .date-range-label {
+  color: #ffffff;
+}
+
 .search-wrapper { flex: 1; position: relative; height: 100%; }
 .search-icon-container { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); opacity: 0.3; display: flex; }
 .search-input { width: 100%; height: 100%; padding: 0 16px 0 44px; border-radius: 6px; border: 1px solid var(--flat-border); background: #ffffff; font-weight: 500; font-size: 15px; outline: none; transition: border-color 0.2s; }
 [data-theme='dark'] .search-input { background: var(--flat-sidebar-bg); }
 .search-input:focus { border-color: var(--flat-primary); }
+
+.date-range-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.date-input-group {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.custom-datepicker-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.date-display-btn {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--flat-primary);
+  cursor: pointer;
+  padding: 4px 10px;
+  background: var(--flat-primary-bg);
+  border: 1px solid transparent;
+  border-radius: 4px;
+  transition: all 0.2s;
+  min-width: 100px;
+  text-align: center;
+}
+
+.date-display-btn:hover {
+  border-color: var(--flat-primary);
+  background: white;
+}
+
+[data-theme='dark'] .date-display-btn:hover {
+  background: var(--flat-muted);
+}
+
+/* --- 鑷畾涔夋棩鍘嗗脊鍑烘 --- */
+.flat-datepicker-popup {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 260px;
+  background: #ffffff;
+  border: 1px solid var(--flat-border);
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  padding: 16px;
+  z-index: 1000;
+  animation: slideUp 0.2s ease-out;
+}
+
+[data-theme='dark'] .flat-datepicker-popup {
+  background: var(--flat-sidebar-bg);
+}
+
+.fdp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.fdp-header button {
+  background: var(--flat-muted);
+  border: 1px solid var(--flat-border);
+  border-radius: 4px;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  color: var(--flat-fg);
+  font-weight: 800;
+  transition: all 0.2s;
+}
+
+.fdp-header button:hover {
+  background: var(--flat-primary);
+  color: white;
+  border-color: var(--flat-primary);
+}
+
+.fdp-month-year {
+  font-size: 14px;
+  font-weight: 900;
+  color: var(--flat-fg);
+}
+
+.fdp-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.fdp-weekdays span {
+  font-size: 11px;
+  font-weight: 900;
+  opacity: 0.3;
+}
+
+.fdp-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.fdp-day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--flat-fg);
+}
+
+.fdp-day:hover:not(.empty):not(.disabled) {
+  background: var(--flat-primary-bg);
+  color: var(--flat-primary);
+}
+
+.fdp-day.active {
+  background: var(--flat-primary) !important;
+  color: white !important;
+}
+
+.fdp-day.today {
+  box-shadow: inset 0 0 0 1px var(--flat-primary);
+}
+
+.fdp-day.disabled {
+  opacity: 0.15;
+  cursor: not-allowed;
+}
+
+.fdp-footer {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--flat-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fdp-earliest-btn, .fdp-today-btn {
+  background: var(--flat-muted);
+  border: 1px solid var(--flat-border);
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--flat-fg);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.fdp-earliest-btn:hover, .fdp-today-btn:hover {
+  background: var(--flat-primary);
+  color: white;
+  border-color: var(--flat-primary);
+}
+
+.date-separator {
+  font-size: 12px;
+  font-weight: 800;
+  color: #000000 !important;
+  opacity: 1 !important;
+}
+
+[data-theme='dark'] .date-separator {
+  color: #ffffff !important;
+}
 
 .flat-select {
   height: 100%;
@@ -404,7 +615,7 @@ button, select, input {
 [data-theme='dark'] .flat-select { background-color: var(--flat-sidebar-bg); }
 .flat-select:hover { border-color: var(--flat-primary); }
 
-/* --- 右侧面板 --- */
+/* --- 鍙充晶闈㈡澘 --- */
 .flat-right-panel { 
   width: 320px; 
   border-left: 1px solid var(--flat-border); 
@@ -478,7 +689,7 @@ button, select, input {
   opacity: 1;
 }
 
-/* 热力图对齐 */
+/* 鐑姏鍥惧榻?*/
 .calendar-header-weeks { 
   display: grid; 
   grid-template-columns: repeat(7, 1fr); 
@@ -514,7 +725,7 @@ button, select, input {
   pointer-events: none;
 }
 
-/* 边缘对齐修正：防止左右溢出 */
+/* 杈圭紭瀵归綈淇锛氶槻姝㈠乏鍙虫孩鍑?*/
 .calendar-day-cell:nth-child(7n+1) .has-tooltip:hover::after,
 .flat-calendar-grid > div:nth-child(7n+1):hover::after {
   left: 0;
@@ -528,7 +739,7 @@ button, select, input {
   transform: translateX(0);
 }
 
-/* --- 目录与主题切换 --- */
+/* --- 鐩綍涓庝富棰樺垏鎹?--- */
 .sidebar-toc-title { 
   font-size: 18px; 
   font-weight: 500; 
@@ -537,15 +748,15 @@ button, select, input {
   padding-left: 4px; 
 }
 
-/* 当 custom-toc-container 为空时，通过相邻兄弟选择器隐藏前面的标题 */
+/* 褰?custom-toc-container 涓虹┖鏃讹紝閫氳繃鐩搁偦鍏勫紵閫夋嫨鍣ㄩ殣钘忓墠闈㈢殑鏍囬 */
 .custom-toc-container:empty { display: none; }
-.custom-toc-container:empty + .dummy-element-to-avoid-syntax-error { display: none; } /* 占位 */
+.custom-toc-container:empty + .dummy-element-to-avoid-syntax-error { display: none; } /* 鍗犱綅 */
 
-/* 改进：利用 JS 渲染容器但为空的特性 */
+/* 鏀硅繘锛氬埄鐢?JS 娓叉煋瀹瑰櫒浣嗕负绌虹殑鐗规€?*/
 .custom-toc-container:empty, 
-.custom-toc-container:empty ~ .sidebar-toc-title { display: none; } /* 这是一个反向思路，通常需要 JS 配合 */
+.custom-toc-container:empty ~ .sidebar-toc-title { display: none; } /* 杩欐槸涓€涓弽鍚戞€濊矾锛岄€氬父闇€瑕?JS 閰嶅悎 */
 
-/* 最终方案：如果容器为空，则隐藏它自己；标题通过 JS 的 noteTOC.length 判断会更稳健，但既然要用 CSS，我们保持简单 */
+/* 鏈€缁堟柟妗堬細濡傛灉瀹瑰櫒涓虹┖锛屽垯闅愯棌瀹冭嚜宸憋紱鏍囬閫氳繃 JS 鐨?noteTOC.length 鍒ゆ柇浼氭洿绋冲仴锛屼絾鏃㈢劧瑕佺敤 CSS锛屾垜浠繚鎸佺畝鍗?*/
 .sidebar-toc-title:has(+ .custom-toc-container:empty) { display: none; }
 .custom-toc-container { display: flex; flex-direction: column; gap: 4px; }
 .toc-item { 
@@ -563,7 +774,7 @@ button, select, input {
 }
 .toc-item:hover { background: var(--flat-bg); color: var(--flat-primary); opacity: 1; }
 
-/* Level 1 (H2) - 最显眼 */
+/* Level 1 (H2) - 鏈€鏄剧溂 */
 .toc-item.level-1 { 
   font-size: 15px; 
   font-weight: 700; 
@@ -571,14 +782,14 @@ button, select, input {
   padding-left: 12px;
 }
 
-/* Level 2 (H3) - 缩进并弱化 */
+/* Level 2 (H3) - 缂╄繘骞跺急鍖?*/
 .toc-item.level-2 { 
   padding-left: 28px; 
   font-size: 13px; 
   opacity: 0.6; 
 }
 
-/* Level 3 (H4) - 进一步缩进和弱化 */
+/* Level 3 (H4) - 杩涗竴姝ョ缉杩涘拰寮卞寲 */
 .toc-item.level-3 { 
   padding-left: 40px; 
   font-size: 12px; 
@@ -594,12 +805,12 @@ button, select, input {
 .breadcrumb-item.active { opacity: 0.8; }
 .breadcrumb-item:not(:last-child)::after { content: "/"; margin-left: 12px; opacity: 0.2; }
 
-/* --- Markdown 居中 --- */
+/* --- Markdown 灞呬腑 --- */
 .markdown img, .theme-doc-markdown img { display: block; margin: 3em auto 1em auto !important; max-width: 100%; border-radius: 8px; }
 .markdown figcaption, .theme-doc-markdown figcaption, .markdown em, .theme-doc-markdown em { display: block; text-align: center; margin-bottom: 3em; font-size: 13px; opacity: 0.6; }
 .markdown table, .theme-doc-markdown table { margin: 2em auto !important; display: table !important; border-collapse: collapse; }
 
-/* --- Admonition (:::tip 等) 样式优化 --- */
+/* --- Admonition (:::tip 绛? 鏍峰紡浼樺寲 --- */
 .admonition, .alert {
   padding: 12px 16px !important;
   margin-bottom: 1.5rem !important;
@@ -624,7 +835,7 @@ button, select, input {
 .view-animate { animation: slideUp 0.4s ease-out; }
 @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; } }
 
-/* --- 页面内切换功能 (源码/预览) --- */
+/* --- 椤甸潰鍐呭垏鎹㈠姛鑳?(婧愮爜/棰勮) --- */
 .doc-view-header {
   display: flex;
   justify-content: space-between;
@@ -725,7 +936,7 @@ button, select, input {
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* --- 响应式适配 (Mobile & Tablet) --- */
+/* --- 鍝嶅簲寮忛€傞厤 (Mobile & Tablet) --- */
 @media (max-width: 1024px) {
   .flat-app-shell { 
     flex-direction: column; 
@@ -735,7 +946,7 @@ button, select, input {
     overflow-y: visible; 
   }
 
-  /* 侧边栏转为顶部导航 */
+  /* 渚ц竟鏍忚浆涓洪《閮ㄥ鑸?*/
   .flat-sidebar { 
     width: 100%; 
     height: auto; 
@@ -791,10 +1002,10 @@ button, select, input {
   }
   
   .sidebar-footer { 
-    display: none; /* 移动端隐藏原有的悬浮页脚 */
+    display: none; /* 绉诲姩绔殣钘忓師鏈夌殑鎮诞椤佃剼 */
   }
 
-  /* 主内容区适配 */
+  /* 涓诲唴瀹瑰尯閫傞厤 */
   .flat-main-stage { 
     padding: 20px 16px; 
     overflow-y: visible; 
@@ -802,7 +1013,7 @@ button, select, input {
   }
   .greeting-text { font-size: 18px; margin-bottom: 20px; text-align: center; }
   
-  /* 笔记项适配 */
+  /* 绗旇椤归€傞厤 */
   .unified-note-item { 
     flex-direction: column; 
     align-items: flex-start; 
@@ -814,7 +1025,7 @@ button, select, input {
   }
   .note-content-main {
     width: 100%;
-    min-width: 0; /* 关键：允许子元素缩小 */
+    min-width: 0; /* 鍏抽敭锛氬厑璁稿瓙鍏冪礌缂╁皬 */
     overflow: hidden;
   }
   .note-link-title { 
@@ -841,12 +1052,12 @@ button, select, input {
     justify-content: flex-start; 
   }
   
-  /* 移动端彻底取消右侧边栏，释放视野 */
+  /* 绉诲姩绔交搴曞彇娑堝彸渚ц竟鏍忥紝閲婃斁瑙嗛噹 */
   .flat-right-panel {
     display: none !important;
   }
 
-  /* 移动端浮动目录按钮 - 移至右下角原主题按钮位 */
+  /* 绉诲姩绔诞鍔ㄧ洰褰曟寜閽?- 绉昏嚦鍙充笅瑙掑師涓婚鎸夐挳浣?*/
   .mobile-toc-toggle {
     display: flex;
     position: fixed;
@@ -865,7 +1076,7 @@ button, select, input {
     cursor: pointer;
   }
 
-  /* 移动端目录弹出层 */
+  /* 绉诲姩绔洰褰曞脊鍑哄眰 */
   .mobile-toc-modal {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -907,11 +1118,11 @@ button, select, input {
     cursor: pointer;
   }
 
-  /* Iframe 宽度补丁 */
+  /* Iframe 瀹藉害琛ヤ竵 */
   .flat-main-stage.no-padding { height: 75vh; }
 }
 
-/* --- 移除笔记详情页面的上一页和下一页 --- */
+/* --- 绉婚櫎绗旇璇︽儏椤甸潰鐨勪笂涓€椤靛拰涓嬩竴椤?--- */
 .pagination-nav {
   display: none !important;
 }

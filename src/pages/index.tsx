@@ -24,6 +24,84 @@ const Icons = {
   List: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>,
 };
 
+// --- 日历弹出组件 ---
+function FlatDatePicker({ value, onChange, min = "2026-01-01", max }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [viewDate, setViewDate] = useState(new Date(value || Date.now()));
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    if (isOpen && value) {
+      setViewDate(new Date(value));
+    }
+  }, [isOpen, value]);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as any)) setIsOpen(false);
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const year = viewDate.getFullYear();
+  const month = viewDate.getMonth();
+
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const firstDay = new Date(year, month, 1).getDay();
+  const days = Array.from({ length: firstDay }, () => null).concat(
+    Array.from({ length: daysInMonth }, (_, i) => i + 1)
+  );
+
+  const handleSelect = (day) => {
+    const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    if (min && dateStr < min) return;
+    if (max && dateStr > max) return;
+    onChange(dateStr);
+    setIsOpen(false);
+  };
+
+  const changeMonth = (offset) => setViewDate(new Date(year, month + offset, 1));
+
+  return (
+    <div className="custom-datepicker-container" ref={containerRef}>
+      <div className="date-display-btn" onClick={() => setIsOpen(!isOpen)}>{value}</div>
+      {isOpen && (
+        <div className="flat-datepicker-popup">
+          <div className="fdp-header">
+            <button onClick={() => changeMonth(-1)}>&lt;</button>
+            <div className="fdp-month-year">{year}年 {month + 1}月</div>
+            <button onClick={() => changeMonth(1)}>&gt;</button>
+          </div>
+          <div className="fdp-weekdays">
+            {['日', '一', '二', '三', '四', '五', '六'].map(d => <span key={d}>{d}</span>)}
+          </div>
+          <div className="fdp-grid">
+            {days.map((day, i) => {
+              if (!day) return <div key={i} className="fdp-day empty" />;
+              const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+              const isSelected = dateStr === value;
+              const isToday = dateStr === new Date().toISOString().split('T')[0];
+              const isDisabled = (min && dateStr < min) || (max && dateStr > max);
+              return (
+                <div key={i} 
+                  className={`fdp-day ${isSelected ? 'active' : ''} ${isToday ? 'today' : ''} ${isDisabled ? 'disabled' : ''}`}
+                  onClick={() => !isDisabled && handleSelect(day)}>
+                  {day}
+                </div>
+              );
+            })}
+          </div>
+          <div className="fdp-footer">
+            <button className="fdp-earliest-btn" onClick={() => { onChange('2026-01-01'); setIsOpen(false); }}>最早</button>
+            <button className="fdp-today-btn" onClick={() => { const today = new Date().toISOString().split('T')[0]; onChange(today); setIsOpen(false); }}>今天</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function UnifiedNoteItem({ note, onSelect, active }) {
   const dateParts = note.date.split('-');
   const displayDate = dateParts.length === 3 ? { y: dateParts[0], m: dateParts[1], d: dateParts[2] } : { y: '', m: '', d: '' };
@@ -111,24 +189,22 @@ function MonthlyCalendar({ notes }) {
 function WorkstationShell() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [selectedNote, setSelectedNote] = useState(null);
-  const [templateViewMode, setTemplateViewMode] = useState('source'); // 'source' | 'preview'
+  const [templateViewMode, setTemplateViewMode] = useState('source');
   const [noteTOC, setNoteTOC] = useState([]);
   const iframeRef = useRef(null);
   const [iframeLoading, setIframeLoading] = useState(true);
   const { colorMode, setColorMode } = useColorMode();
   const [query, setQuery] = useState('');
   const [selectedTag, setSelectedTag] = useState('全部标签');
+  const [startDate, setStartDate] = useState('2026-01-01');
+  const [endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
   const [showMobileTOC, setShowMobileTOC] = useState(false);
-
-  // 用于彻底解决 404 闪烁的延迟路径状态
   const [iframeSrc, setIframeSrc] = useState('');
 
-  // 初始化 URL 处理与监听回退
   const syncStateFromUrl = () => {
     const params = new URLSearchParams(window.location.search);
     const tab = params.get('tab') || 'dashboard';
     const docPath = params.get('doc');
-    
     setActiveTab(tab);
     if (docPath) {
       const allNotes = [...statsData.notes];
@@ -136,13 +212,11 @@ function WorkstationShell() {
       if (foundNote) {
         setSelectedNote(foundNote);
         setIframeSrc(`${foundNote.path}?minimal=1`);
-      }
-      else if (docPath === '/docs/templates/note-template') {
-        setSelectedNote({ title: '笔记模板', path: '/docs/templates/note-template' });
+      } else if (docPath === '/docs/templates/note-template') {
+        setSelectedNote({ title: '笔记模板', path: '/docs/templates/note-template' } as any);
         setIframeSrc('/docs/templates/note-template?minimal=1');
-      }
-      else if (docPath === '/docs/reference/library') {
-        setSelectedNote({ title: '引用总库', path: '/docs/reference/library' });
+      } else if (docPath === '/docs/reference/library') {
+        setSelectedNote({ title: '引用总库', path: '/docs/reference/library' } as any);
         setIframeSrc('/docs/reference/library?minimal=1');
       }
     } else {
@@ -160,27 +234,18 @@ function WorkstationShell() {
   const updateStateAndUrl = (tab, note = null) => {
     setActiveTab(tab);
     setSelectedNote(note);
-    setNoteTOC([]); 
+    setNoteTOC([]);
     setIframeLoading(true);
-    setIframeSrc(''); // 先清空路径，防止旧页面或 404 闪烁
-
+    setIframeSrc('');
     const params = new URLSearchParams();
     params.set('tab', tab);
     if (note) params.set('doc', note.path);
-    
-    // 使用 pushState 而非 replaceState，从而保留历史记录
     window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
-    
-    if (note) {
-      // 给予 50ms 缓冲，确保状态同步后再加载
-      setTimeout(() => setIframeSrc(`${note.path}?minimal=1`), 50);
-    }
+    if (note) setTimeout(() => setIframeSrc(`${note.path}?minimal=1`), 50);
   };
 
   const handleTOCClick = (hash) => {
-    if (iframeRef.current) {
-      iframeRef.current.contentWindow.location.hash = hash;
-    }
+    if (iframeRef.current) iframeRef.current.contentWindow.location.hash = hash;
   };
 
   const recentNotes = useMemo(() => statsData.notes.slice(0, 10), []);
@@ -189,9 +254,15 @@ function WorkstationShell() {
     return statsData.notes.filter(n => {
       const matchesTag = selectedTag === '全部标签' || n.tags.includes(selectedTag);
       const matchesSearch = n.title.toLowerCase().includes(query.toLowerCase()) || n.tags.some(t => t.toLowerCase().includes(query.toLowerCase()));
-      return matchesTag && matchesSearch;
+      let matchesDate = true;
+      if (startDate || endDate) {
+        const noteDate = n.date;
+        if (startDate && noteDate < startDate) matchesDate = false;
+        if (endDate && noteDate > endDate) matchesDate = false;
+      }
+      return matchesTag && matchesSearch && matchesDate;
     });
-  }, [selectedTag, query]);
+  }, [selectedTag, query, startDate, endDate]);
 
   const [greeting, setGreeting] = useState('');
   useEffect(() => {
@@ -217,14 +288,12 @@ function WorkstationShell() {
             {colorMode === 'dark' ? <Icons.Sun /> : <Icons.Moon />}
           </button>
         </div>
-
         <nav className="sidebar-nav">
           <button className={`flat-nav-link ${activeTab === 'dashboard' ? 'active' : ''}`} onClick={() => updateStateAndUrl('dashboard')}><Icons.Terminal /> 总览</button>
           <button className={`flat-nav-link ${activeTab === 'library' ? 'active' : ''}`} onClick={() => updateStateAndUrl('library')}><Icons.Library /> 文库</button>
-          <button className={`flat-nav-link ${activeTab === 'template' ? 'active' : ''}`} onClick={() => updateStateAndUrl('template', { title: '笔记模板', path: '/docs/templates/note-template' })}><Icons.Resource /> 笔记模板</button>
-          <button className={`flat-nav-link ${activeTab === 'reference' ? 'active' : ''}`} onClick={() => updateStateAndUrl('reference', { title: '引用总库', path: '/docs/reference/library' })}><Icons.Reference /> 引用总库</button>
+          <button className={`flat-nav-link ${activeTab === 'template' ? 'active' : ''}`} onClick={() => updateStateAndUrl('template', { title: '笔记模板', path: '/docs/templates/note-template' } as any)}><Icons.Resource /> 笔记模板</button>
+          <button className={`flat-nav-link ${activeTab === 'reference' ? 'active' : ''}`} onClick={() => updateStateAndUrl('reference', { title: '引用总库', path: '/docs/reference/library' } as any)}><Icons.Reference /> 引用总库</button>
         </nav>
-
         <div className="sidebar-footer">
           <button className="theme-toggle-btn" onClick={() => setColorMode(colorMode === 'dark' ? 'light' : 'dark')}>
             {colorMode === 'dark' ? <Icons.Sun /> : <Icons.Moon />}
@@ -236,14 +305,11 @@ function WorkstationShell() {
       <main className={`flat-main-stage ${isViewingDoc ? 'no-padding' : ''} ${isViewingDoc ? 'is-viewing-doc' : ''}`}>
         {isViewingDoc ? (
           <div className="view-animate" style={{height: '100%', display: 'flex', flexDirection: 'column'}}>
-            {/* 移动端目录按钮 */}
             {noteTOC.length > 0 && (
               <button className="mobile-toc-toggle" onClick={() => setShowMobileTOC(true)}>
                 <Icons.List />
               </button>
             )}
-
-            {/* 移动端目录弹出层 */}
             {showMobileTOC && (
               <div className="mobile-toc-modal" onClick={() => setShowMobileTOC(false)}>
                 <div className="mobile-toc-content" onClick={e => e.stopPropagation()}>
@@ -253,9 +319,7 @@ function WorkstationShell() {
                   </div>
                   <div className="custom-toc-container">
                     {noteTOC.map((item, i) => (
-                      <div key={i} 
-                        className={`toc-item level-${item.level}`} 
-                        onClick={() => { handleTOCClick(item.hash); setShowMobileTOC(false); }}>
+                      <div key={i} className={`toc-item level-${item.level}`} onClick={() => { handleTOCClick(item.hash); setShowMobileTOC(false); }}>
                         {item.text}
                       </div>
                     ))}
@@ -263,7 +327,6 @@ function WorkstationShell() {
                 </div>
               </div>
             )}
-
             {activeTab !== 'reference' && (
               <div className="doc-view-header" style={activeTab === 'template' ? {justifyContent: 'center'} : {}}>
                 <div className="doc-header-left">
@@ -283,12 +346,9 @@ function WorkstationShell() {
                 )}
               </div>
             )}
-
             <div className="note-iframe-wrapper" style={{flex: 1, width: '100%', position: 'relative'}}>
               {iframeLoading && templateViewMode !== 'source' && (
-                <div className="iframe-loader">
-                   <div className="spinner"></div>
-                </div>
+                <div className="iframe-loader"><div className="spinner"></div></div>
               )}
               {activeTab === 'template' && templateViewMode === 'source' ? (
                 <div className="source-view-container">
@@ -296,91 +356,49 @@ function WorkstationShell() {
                 </div>
               ) : (
                 <div className="note-iframe-container" style={{
-                  height: '100%', width: '100%', position: 'relative', 
-                  background: 'var(--flat-bg)', overflow: 'hidden',
+                  height: '100%', width: '100%', position: 'relative', background: 'var(--flat-bg)', overflow: 'hidden',
                   opacity: iframeLoading ? 0 : 1, transition: 'opacity 0.2s'
                 }}>
                    {iframeSrc && (
-                     <iframe ref={iframeRef} src={iframeSrc} 
-                       style={{width: '100%', height: '100%', border: 'none'}} 
-                       title={displayDoc.title}
+                     <iframe ref={iframeRef} src={iframeSrc} style={{width: '100%', height: '100%', border: 'none'}} title={displayDoc.title}
                        onLoad={(e) => {
                          try {
-                           const doc = e.target.contentWindow.document;
-                           
-                           // 1. 注入样式
+                           const doc = (e.target as any).contentWindow.document;
                            const link = doc.createElement('link');
                            link.rel = 'stylesheet';
                            link.href = 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css';
                            doc.head.appendChild(link);
-
                            const style = doc.createElement('style');
                            style.innerHTML = `
-                             .navbar, footer, .theme-doc-sidebar-container, 
-                             nav[aria-label="Breadcrumbs"], .theme-doc-breadcrumbs, 
-                             .theme-doc-footer-edit-meta-row, .theme-doc-toc-mobile, 
-                             .theme-doc-toc-desktop, h1, #library, .breadcrumbs { display: none !important; }
+                             .navbar, footer, .theme-doc-sidebar-container, nav[aria-label="Breadcrumbs"], .theme-doc-breadcrumbs, .theme-doc-footer-edit-meta-row, .theme-doc-toc-mobile, .theme-doc-toc-desktop, h1, #library, .breadcrumbs { display: none !important; }
                              .container, .theme-doc-main-container, .col { max-width: 100% !important; padding: 0 !important; margin: 0 !important; width: 100% !important; }
                              main { padding: 24px 60px !important; width: 100% !important; }
                              article { max-width: none !important; width: 100% !important; }
                              html { scroll-behavior: smooth; font-size: 15px; }
                              body { font-size: 15px !important; background-color: transparent !important; }
-
-                             /* 注入 Admonition 优化 (极致紧凑版) */
                              [class*='admonition'] { padding: 6px 12px !important; margin: 0.5rem 0 !important; border-radius: 4px !important; }
-                             
-                             [class*='admonitionHeading'] { 
-                               display: flex !important; 
-                               align-items: center !important; 
-                               margin: 0 !important; 
-                               padding: 0 !important; 
-                               font-size: 1em !important; 
-                               line-height: 1.2 !important; 
-                               text-transform: uppercase; 
-                               font-weight: 800 !important; 
-                             }
-                             
-                             /* 确保图标容器和图标本身垂直居中且无偏移 */
-                             [class*='admonitionIcon'] { 
-                               display: flex !important; 
-                               align-items: center !important; 
-                               margin-right: 6px !important; 
-                               padding: 0 !important;
-                               flex-shrink: 0 !important;
-                             }
-                             [class*='admonitionHeading'] svg { 
-                               width: 14px !important; 
-                               height: 14px !important; 
-                               display: block !important; 
-                             }
-
-                             [class*='admonitionContent'] { 
-                               margin: 0 !important; 
-                               padding: 0 !important; 
-                               line-height: 1.2 !important; 
-                               font-size: 13px !important; 
-                             }
+                             [class*='admonitionHeading'] { display: flex !important; align-items: center !important; margin: 0 !important; padding: 0 !important; font-size: 1em !important; line-height: 1.2 !important; text-transform: uppercase; font-weight: 800 !important; }
+                             [class*='admonitionIcon'] { display: flex !important; align-items: center !important; margin-right: 6px !important; padding: 0 !important; flex-shrink: 0 !important; }
+                             [class*='admonitionHeading'] svg { width: 14px !important; height: 14px !important; display: block !important; }
+                             [class*='admonitionContent'] { margin: 0 !important; padding: 0 !important; line-height: 1.2 !important; font-size: 13px !important; }
                              [class*='admonitionContent'] > *:first-child { margin-top: 2px !important; }
                              [class*='admonitionContent'] p { margin: 0 !important; }
                              [class*='admonitionContent'] > *:last-child { margin-bottom: 0 !important; }
                            `;
                            doc.head.appendChild(style);
-
-                           // 2. 提取目录
                            const extractTOC = () => {
                              const headings = Array.from(doc.querySelectorAll('h2, h3, h4'));
                              const toc = headings.map(h => ({
-                               text: h.innerText.replace('#', '').trim(),
+                               text: (h as any).innerText.replace('#', '').trim(),
                                level: h.tagName === 'H2' ? 1 : h.tagName === 'H3' ? 2 : 3,
                                hash: '#' + (h.id || h.getAttribute('data-id') || '')
-                             })).filter(item => item.text && item.hash !== '#');
-                             setNoteTOC(toc);
+                             })).filter((item: any) => item.text && item.hash !== '#');
+                             setNoteTOC(toc as any);
                            };
-                           
                            extractTOC();
                            setTimeout(extractTOC, 300);
                            setTimeout(extractTOC, 1000);
-                           setIframeLoading(false); // 内容就绪后再关闭 loading
+                           setIframeLoading(false);
                          } catch (err) {
                            console.error("TOC Extraction failed:", err);
                            setNoteTOC([]);
@@ -404,9 +422,23 @@ function WorkstationShell() {
             )}
             {activeTab === 'library' && (
               <div className="view-animate">
-                <div className="library-filter-bar">
-                  <div className="search-wrapper"><div className="search-icon-container"><Icons.Search /></div><input className="search-input" placeholder="检索笔记或标签..." value={query} onChange={(e) => setQuery(e.target.value)} /></div>
-                  <select className="flat-select" value={selectedTag} onChange={(e) => setSelectedTag(e.target.value)}>{allTags.map(tag => <option key={tag} value={tag}>{tag}</option>)}</select>
+                <div className="library-filter-container">
+                  <div className="library-filter-row">
+                    <div className="search-wrapper"><div className="search-icon-container"><Icons.Search /></div><input className="search-input" placeholder="检索笔记或标签..." value={query} onChange={(e) => setQuery(e.target.value)} /></div>
+                    <select className="flat-select" value={selectedTag} onChange={(e) => setSelectedTag(e.target.value)}>{allTags.map(tag => <option key={tag} value={tag}>{tag}</option>)}</select>
+                  </div>
+                  <div className="library-filter-row second-row">
+                    <div className="date-range-label">时间范围:</div>
+                    <div className="date-range-wrapper">
+                      <div className="date-input-group">
+                        <FlatDatePicker value={startDate} onChange={setStartDate} max={endDate} />
+                      </div>
+                      <span className="date-separator">至</span>
+                      <div className="date-input-group">
+                        <FlatDatePicker value={endDate} onChange={setEndDate} min={startDate} max={new Date().toISOString().split('T')[0]} />
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div style={{display: 'flex', flexDirection: 'column'}}>{filteredNotes.map((note, i) => <UnifiedNoteItem key={i} note={note} onSelect={(n) => updateStateAndUrl('library', n)} active={selectedNote?.path === note.path} />)}</div>
               </div>
@@ -434,10 +466,7 @@ function WorkstationShell() {
             <MonthlyCalendar notes={statsData.notes} />
             <div className="flat-stats-card">
               <span className="lab">知识库容量</span>
-              <div className="val">
-                {statsData.total_papers}
-                <span className="unit">篇笔记</span>
-              </div>
+              <div className="val">{statsData.total_papers}<span className="unit">篇笔记</span></div>
             </div>
           </>
         )}
@@ -449,9 +478,7 @@ function WorkstationShell() {
 export default function Home(): JSX.Element {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
-
-  if (!mounted) return null; // 服务端返回完全空白，避免骨架闪烁
-
+  if (!mounted) return null;
   return (
     <Layout title="科研控制台" noFooter>
       <WorkstationShell />
