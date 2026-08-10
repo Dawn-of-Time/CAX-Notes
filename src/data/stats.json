@@ -1,7 +1,85 @@
 {
-  "total_papers": 33,
+  "total_papers": 40,
   "template_raw": "---\r\ntitle: 论文题目\r\ntags:\r\n  - tag1\r\n  - tag2\r\n---\r\n\r\n:::tip[资料卡]\r\n - 会议/期刊：\r\n - 其他信息1：\r\n - 其他信息2：\r\n:::\r\n\r\n## 1 一级标题\r\n### 1.1 二级标题\r\n#### （1）三级标题\r\n\r\n正文。\r\n\r\n## 2 格式规范\r\n### 2.1 正文\r\n正文段落间需要空一行，否则将视为同一段落。\r\n\r\n务必注意：\r\n\r\n1. 若要加粗文字，请采用<strong>加粗文字</strong>，**加粗文字**会在一些情况下失效。\r\n2. 换行标签`<br>`需要写成自闭合形式`<br />`。\r\n\r\n### 2.2 图\r\n引用图时，可如此表达：如[图2-1](#figure2-1)所示。括号中的内容是图id。格式如下：\r\n<figure id=\"figure2-1\">\r\n  <img src=\"./2-1图链接.png\"/>\r\n  <figcaption>图2-1 图题</figcaption>\r\n</figure>\r\n\r\n:::info[图编号的含义]\r\n记图编号为图$x-y$，其中：\r\n$x$——一级标题编号；\r\n$y$——图序号（即第几幅图。计数自1起，并在跨越章后重置）。\r\n:::\r\n\r\n若图含子图，可如此表达：如[图2-2](#figure2-2)、[图2-2(a)](#figure2-2a)、[图2-2(b)](#figure2-2b)所示。图格式如下：\r\n\r\n<figure id=\"figure2-2\">\r\n  <figure id=\"figure2-2a\">\r\n    <img src=\"./2-2(a)图名.png\"/>\r\n    <figcaption>图2-2(a) 子图</figcaption>\r\n  </figure>\r\n\r\n  <figure id=\"figure2-2b\">\r\n    <img src=\"./2-2(b)图名.png\"/>\r\n    <figcaption>图2-2(b) 子图</figcaption>\r\n  </figure>\r\n\r\n  <figcaption>图2-2 含子图的图</figcaption>\r\n</figure>\r\n\r\n### 2.3 表\r\n引用表时，可如此表达：如[表2-1](#table2-1)所示。括号中的内容是表id。表格式如下：\r\n\r\n<table id=\"table2-1\">\r\n  <caption>表2-1 表题</caption>\r\n  <thead>\r\n    <tr><th>表头第一列</th><th>表头第二列</th></tr>\r\n  </thead>\r\n  <tbody>\r\n    <tr><td>表身第一行第一列内容</td><td>表身第一行第二列内容</td></tr>\r\n    <tr><td>表身第二行第一列内容</td><td>表身第二行第二列内容</td></tr>\r\n  </tbody>\r\n</table>\r\n\r\n表编号的含义与图相仿。\r\n\r\n务必注意：`<tr>`和`</tr>`标签之间不允许换行。\r\n\r\n### 2.4 公式\r\n公式使用示例：设$R_a$是由于环境光照产生的结果强度曲线，$L_c$是环境光的强度曲线，$O_a$是物体的颜色曲线，则环境光照公式为：\r\n\r\n$$\r\nR_a = L_c \\cdot O_a\r\n$$ \r\n\r\n### 2.5 其他\r\n未尽事宜，可前往Docusaurus官网查阅资料，或在搜索引擎中查找有关markdown的语法。\r\n\r\n## 3 内容要素\r\n笔记内容须参考下述要素撰写：\r\n - 解决何问题\r\n - 大致采取何方法\r\n - 优势与不足\r\n - 创新点[Optional]\r\n - 个人感悟",
   "notes": [
+    {
+      "title": "Automatic Hierarchical Mid-surface Abstraction of Thin-walled Models based on Rib Decomposition",
+      "path": "/docs/2026/38",
+      "tags": [
+        "中面生成",
+        "特征识别"
+      ],
+      "date": "2026-07-13"
+    },
+    {
+      "title": "Graph-based feature recognition for injection moulding based on a mid-surface approach",
+      "path": "/docs/2026/39",
+      "tags": [
+        "中面",
+        "特征识别",
+        "邻接图邻接矩阵"
+      ],
+      "date": "2026-07-13"
+    },
+    {
+      "title": "Adaptation of CAD Model Topology for Finite Element Analysis",
+      "path": "/docs/2026/40",
+      "tags": [
+        "CAD/B-rep",
+        "CAE前处理",
+        "有限元网格",
+        "虚拓扑",
+        "Mesh Constraint Topology",
+        "小特征简化"
+      ],
+      "date": "2026-07-13"
+    },
+    {
+      "title": "A survey of CAD model simplification techniques for physics-based simulation applications",
+      "path": "/docs/2026/35",
+      "tags": [
+        "综述",
+        "模型简化",
+        "CAD"
+      ],
+      "date": "2026-07-06"
+    },
+    {
+      "title": "Automatic dimensional reduction and meshing of stiffened thin-wall structures",
+      "path": "/docs/2026/36",
+      "tags": [
+        "模型简化",
+        "中面生成",
+        "有限元分析",
+        "降维"
+      ],
+      "date": "2026-07-06"
+    },
+    {
+      "title": "Methods and Algorithms of Automated CAD Repair for Incremental Surface Meshing",
+      "path": "/docs/2026/37",
+      "tags": [
+        "CAD模型修复",
+        "B-rep",
+        "几何错误",
+        "拓扑错误",
+        "有限元前处理",
+        "网格划分",
+        "小特征处理"
+      ],
+      "date": "2026-07-06"
+    },
+    {
+      "title": "A Survey on 3D CAD Model Quality Assurance and Testing Tools",
+      "path": "/docs/2026/34",
+      "tags": [
+        "CAD模型质量",
+        "模型质量检测",
+        "缺陷识别",
+        "模型修复"
+      ],
+      "date": "2026-06-29"
+    },
     {
       "title": "A Critical Review of Feature Recognition Techniques",
       "path": "/docs/2026/30",
@@ -361,24 +439,24 @@
   ],
   "recent_activities": [
     {
-      "title": "A Critical Review of Feature Recognition Techniques",
-      "date": "2026-06-22"
+      "title": "Automatic Hierarchical Mid-surface Abstraction of Thin-walled Models based on Rib Decomposition",
+      "date": "2026-07-13"
     },
     {
-      "title": "Bayesian approach for extracting and identifying features",
-      "date": "2026-06-22"
+      "title": "Graph-based feature recognition for injection moulding based on a mid-surface approach",
+      "date": "2026-07-13"
     },
     {
-      "title": "FlexCAD：基于微调大语言模型的统一可控CAD生成",
-      "date": "2026-06-22"
+      "title": "Adaptation of CAD Model Topology for Finite Element Analysis",
+      "date": "2026-07-13"
     },
     {
-      "title": "TOOLCAD：探索面向文本到CAD生成的工具调用型大语言模型与强化学习",
-      "date": "2026-06-22"
+      "title": "A survey of CAD model simplification techniques for physics-based simulation applications",
+      "date": "2026-07-06"
     },
     {
-      "title": "2D point-in-polygon test by classifying edges into layers",
-      "date": "2026-06-15"
+      "title": "Automatic dimensional reduction and meshing of stiffened thin-wall structures",
+      "date": "2026-07-06"
     }
   ]
 }
