@@ -1,10 +1,111 @@
 {
-  "total_papers": 40,
+  "total_papers": 52,
   "template_raw": "---\r\ntitle: 论文题目\r\ntags:\r\n  - tag1\r\n  - tag2\r\n---\r\n\r\n:::tip[资料卡]\r\n - 会议/期刊：\r\n - 其他信息1：\r\n - 其他信息2：\r\n:::\r\n\r\n## 1 一级标题\r\n### 1.1 二级标题\r\n#### （1）三级标题\r\n\r\n正文。\r\n\r\n## 2 格式规范\r\n### 2.1 正文\r\n正文段落间需要空一行，否则将视为同一段落。\r\n\r\n务必注意：\r\n\r\n1. 若要加粗文字，请采用<strong>加粗文字</strong>，**加粗文字**会在一些情况下失效。\r\n2. 换行标签`<br>`需要写成自闭合形式`<br />`。\r\n\r\n### 2.2 图\r\n引用图时，可如此表达：如[图2-1](#figure2-1)所示。括号中的内容是图id。格式如下：\r\n<figure id=\"figure2-1\">\r\n  <img src=\"./2-1图链接.png\"/>\r\n  <figcaption>图2-1 图题</figcaption>\r\n</figure>\r\n\r\n:::info[图编号的含义]\r\n记图编号为图$x-y$，其中：\r\n$x$——一级标题编号；\r\n$y$——图序号（即第几幅图。计数自1起，并在跨越章后重置）。\r\n:::\r\n\r\n若图含子图，可如此表达：如[图2-2](#figure2-2)、[图2-2(a)](#figure2-2a)、[图2-2(b)](#figure2-2b)所示。图格式如下：\r\n\r\n<figure id=\"figure2-2\">\r\n  <figure id=\"figure2-2a\">\r\n    <img src=\"./2-2(a)图名.png\"/>\r\n    <figcaption>图2-2(a) 子图</figcaption>\r\n  </figure>\r\n\r\n  <figure id=\"figure2-2b\">\r\n    <img src=\"./2-2(b)图名.png\"/>\r\n    <figcaption>图2-2(b) 子图</figcaption>\r\n  </figure>\r\n\r\n  <figcaption>图2-2 含子图的图</figcaption>\r\n</figure>\r\n\r\n### 2.3 表\r\n引用表时，可如此表达：如[表2-1](#table2-1)所示。括号中的内容是表id。表格式如下：\r\n\r\n<table id=\"table2-1\">\r\n  <caption>表2-1 表题</caption>\r\n  <thead>\r\n    <tr><th>表头第一列</th><th>表头第二列</th></tr>\r\n  </thead>\r\n  <tbody>\r\n    <tr><td>表身第一行第一列内容</td><td>表身第一行第二列内容</td></tr>\r\n    <tr><td>表身第二行第一列内容</td><td>表身第二行第二列内容</td></tr>\r\n  </tbody>\r\n</table>\r\n\r\n表编号的含义与图相仿。\r\n\r\n务必注意：`<tr>`和`</tr>`标签之间不允许换行。\r\n\r\n### 2.4 公式\r\n公式使用示例：设$R_a$是由于环境光照产生的结果强度曲线，$L_c$是环境光的强度曲线，$O_a$是物体的颜色曲线，则环境光照公式为：\r\n\r\n$$\r\nR_a = L_c \\cdot O_a\r\n$$ \r\n\r\n### 2.5 其他\r\n未尽事宜，可前往Docusaurus官网查阅资料，或在搜索引擎中查找有关markdown的语法。\r\n\r\n## 3 内容要素\r\n笔记内容须参考下述要素撰写：\r\n - 解决何问题\r\n - 大致采取何方法\r\n - 优势与不足\r\n - 创新点[Optional]\r\n - 个人感悟",
   "notes": [
     {
+      "title": "Clarify Before You Draw: Proactive Agents for Robust Text-to-CAD Generation",
+      "path": "/docs/2026/52",
+      "tags": [
+        "CAD",
+        "LLM Agent",
+        "歧义消解",
+        "文本到CAD",
+        "论文精读"
+      ],
+      "date": "2026-08-10"
+    },
+    {
+      "title": "Pointer-CAD: Unifying B-Rep and Command Sequences via Pointer-based Edges & Faces Selection",
+      "path": "/docs/2026/50",
+      "tags": [
+        "CAD",
+        "B-Rep",
+        "命令序列",
+        "指针机制",
+        "LLM",
+        "论文精读"
+      ],
+      "date": "2026-08-03"
+    },
+    {
+      "title": "CADDesigner：面向概念CAD建模的通用智能体",
+      "path": "/docs/2026/51",
+      "tags": [
+        "CAD",
+        "LLM Agent",
+        "多模态生成",
+        "论文精读"
+      ],
+      "date": "2026-08-03"
+    },
+    {
+      "title": "CAD-Coder: Text-to-CAD Generation with Chain-of-Thought and Geometric Reward",
+      "path": "/docs/2026/49",
+      "tags": [
+        "CAD",
+        "CadQuery",
+        "GRPO",
+        "思维链",
+        "强化学习",
+        "论文精读"
+      ],
+      "date": "2026-07-27"
+    },
+    {
+      "title": "FutureCAD: Towards High-Fidelity CAD Generation via LLM-Driven Program Generation and Text-Based B-Rep Primitive Grounding",
+      "path": "/docs/2026/47",
+      "tags": [
+        "CAD",
+        "B-Rep",
+        "特征建模",
+        "程序合成",
+        "强化学习",
+        "论文精读"
+      ],
+      "date": "2026-07-20"
+    },
+    {
+      "title": "DreamCAD: Scaling Multi-modal CAD Generation using Differentiable Parametric Surfaces",
+      "path": "/docs/2026/48",
+      "tags": [
+        "CAD",
+        "多模态生成",
+        "参数化曲面",
+        "Bézier补丁",
+        "文本到CAD",
+        "论文精读"
+      ],
+      "date": "2026-07-20"
+    },
+    {
+      "title": "GenCAD: Image-Conditioned CAD Generation with Transformer-Based Contrastive Representation and Diffusion Priors",
+      "path": "/docs/2026/42",
+      "tags": [
+        "CAD",
+        "图像到CAD",
+        "对比学习",
+        "扩散模型",
+        "Transformer",
+        "论文精读"
+      ],
+      "date": "2026-07-13"
+    },
+    {
+      "title": "Drawing2CAD: Sequence-to-Sequence Learning for CAD Generation from Vector Drawings",
+      "path": "/docs/2026/43",
+      "tags": [
+        "CAD",
+        "矢量工程图",
+        "序列到序列",
+        "SVG",
+        "双解码器",
+        "论文精读"
+      ],
+      "date": "2026-07-13"
+    },
+    {
       "title": "Automatic Hierarchical Mid-surface Abstraction of Thin-walled Models based on Rib Decomposition",
-      "path": "/docs/2026/38",
+      "path": "/docs/2026/44",
       "tags": [
         "中面生成",
         "特征识别"
@@ -13,7 +114,7 @@
     },
     {
       "title": "Graph-based feature recognition for injection moulding based on a mid-surface approach",
-      "path": "/docs/2026/39",
+      "path": "/docs/2026/45",
       "tags": [
         "中面",
         "特征识别",
@@ -23,7 +124,7 @@
     },
     {
       "title": "Adaptation of CAD Model Topology for Finite Element Analysis",
-      "path": "/docs/2026/40",
+      "path": "/docs/2026/46",
       "tags": [
         "CAD/B-rep",
         "CAE前处理",
@@ -35,8 +136,21 @@
       "date": "2026-07-13"
     },
     {
+      "title": "CAD-GPT: Synthesising CAD Construction Sequence with Spatial Reasoning-Enhanced Multimodal LLMs",
+      "path": "/docs/2026/37",
+      "tags": [
+        "CAD",
+        "MLLM",
+        "空间推理",
+        "多模态",
+        "LLaVA",
+        "论文精读"
+      ],
+      "date": "2026-07-06"
+    },
+    {
       "title": "A survey of CAD model simplification techniques for physics-based simulation applications",
-      "path": "/docs/2026/35",
+      "path": "/docs/2026/38",
       "tags": [
         "综述",
         "模型简化",
@@ -46,7 +160,7 @@
     },
     {
       "title": "Automatic dimensional reduction and meshing of stiffened thin-wall structures",
-      "path": "/docs/2026/36",
+      "path": "/docs/2026/39",
       "tags": [
         "模型简化",
         "中面生成",
@@ -57,7 +171,7 @@
     },
     {
       "title": "Methods and Algorithms of Automated CAD Repair for Incremental Surface Meshing",
-      "path": "/docs/2026/37",
+      "path": "/docs/2026/40",
       "tags": [
         "CAD模型修复",
         "B-rep",
@@ -70,8 +184,20 @@
       "date": "2026-07-06"
     },
     {
+      "title": "TransformCAD: Multimodal Transformer for Computer-Aided Design Generation",
+      "path": "/docs/2026/41",
+      "tags": [
+        "CAD",
+        "多模态生成",
+        "Transformer",
+        "VQ-VAE",
+        "论文精读"
+      ],
+      "date": "2026-07-06"
+    },
+    {
       "title": "A Survey on 3D CAD Model Quality Assurance and Testing Tools",
-      "path": "/docs/2026/34",
+      "path": "/docs/2026/35",
       "tags": [
         "CAD模型质量",
         "模型质量检测",
@@ -81,8 +207,34 @@
       "date": "2026-06-29"
     },
     {
-      "title": "A Critical Review of Feature Recognition Techniques",
+      "title": "Large Language Models for Computer-Aided Design: A Survey",
+      "path": "/docs/2026/36",
+      "tags": [
+        "LLM",
+        "CAD",
+        "Survey",
+        "综述",
+        "代码生成",
+        "参数化建模"
+      ],
+      "date": "2026-06-29"
+    },
+    {
+      "title": "GeoFusion-CAD: Structure-Aware Diffusion with Geometric State Space for Parametric 3D Design",
       "path": "/docs/2026/30",
+      "tags": [
+        "CAD",
+        "State-Space Model",
+        "扩散模型",
+        "层次化表示",
+        "长序列生成",
+        "论文精读"
+      ],
+      "date": "2026-06-22"
+    },
+    {
+      "title": "A Critical Review of Feature Recognition Techniques",
+      "path": "/docs/2026/31",
       "tags": [
         "三维几何特征识别与抑制",
         "综述"
@@ -91,7 +243,7 @@
     },
     {
       "title": "Bayesian approach for extracting and identifying features",
-      "path": "/docs/2026/31",
+      "path": "/docs/2026/32",
       "tags": [
         "三维几何特征识别与抑制",
         "贝叶斯概率",
@@ -101,7 +253,7 @@
     },
     {
       "title": "FlexCAD：基于微调大语言模型的统一可控CAD生成",
-      "path": "/docs/2026/32",
+      "path": "/docs/2026/33",
       "tags": [
         "CAD生成",
         "大语言模型",
@@ -112,7 +264,7 @@
     },
     {
       "title": "TOOLCAD：探索面向文本到CAD生成的工具调用型大语言模型与强化学习",
-      "path": "/docs/2026/33",
+      "path": "/docs/2026/34",
       "tags": [
         "CAD生成",
         "大语言模型",
@@ -369,7 +521,7 @@
         "OpenCASCADE",
         "检索增强生成"
       ],
-      "date": "2026-04-26"
+      "date": "2026-04-21"
     },
     {
       "title": "A Parallel Method of NURBS Inverse Evaluation for 3D CAD Model Quality Testing",
@@ -439,24 +591,24 @@
   ],
   "recent_activities": [
     {
-      "title": "Automatic Hierarchical Mid-surface Abstraction of Thin-walled Models based on Rib Decomposition",
-      "date": "2026-07-13"
+      "title": "Clarify Before You Draw: Proactive Agents for Robust Text-to-CAD Generation",
+      "date": "2026-08-10"
     },
     {
-      "title": "Graph-based feature recognition for injection moulding based on a mid-surface approach",
-      "date": "2026-07-13"
+      "title": "Pointer-CAD: Unifying B-Rep and Command Sequences via Pointer-based Edges & Faces Selection",
+      "date": "2026-08-03"
     },
     {
-      "title": "Adaptation of CAD Model Topology for Finite Element Analysis",
-      "date": "2026-07-13"
+      "title": "CADDesigner：面向概念CAD建模的通用智能体",
+      "date": "2026-08-03"
     },
     {
-      "title": "A survey of CAD model simplification techniques for physics-based simulation applications",
-      "date": "2026-07-06"
+      "title": "CAD-Coder: Text-to-CAD Generation with Chain-of-Thought and Geometric Reward",
+      "date": "2026-07-27"
     },
     {
-      "title": "Automatic dimensional reduction and meshing of stiffened thin-wall structures",
-      "date": "2026-07-06"
+      "title": "FutureCAD: Towards High-Fidelity CAD Generation via LLM-Driven Program Generation and Text-Based B-Rep Primitive Grounding",
+      "date": "2026-07-20"
     }
   ]
 }
